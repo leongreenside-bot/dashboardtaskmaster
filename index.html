@@ -123,12 +123,17 @@
     }
 
     .conqueror-avatar {
-      position: absolute; top: 8px; right: 8px;
-      width: 30px; height: 30px; border-radius: 50%;
-      border: 2px solid var(--red);
-      object-fit: cover;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.7);
-      background: #1a1a24;
+      position: absolute !important; top: 8px !important; right: 8px !important;
+      width: 36px !important; height: 36px !important;
+      min-width: 36px !important; max-width: 36px !important;
+      min-height: 36px !important; max-height: 36px !important;
+      border-radius: 50% !important;
+      border: 2px solid var(--red) !important;
+      object-fit: cover !important;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.7) !important;
+      background: #1a1a24 !important;
+      display: block !important;
+      z-index: 5 !important;
     }
     .badge-conquered-with-avatar {
       position: absolute; top: 8px; right: 44px; background: var(--red);
