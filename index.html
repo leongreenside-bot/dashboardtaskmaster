@@ -644,7 +644,7 @@
     const CONQUERORS = [
       { name: 'Léon',   img: 'leon.png'   },
       { name: 'Tim',    img: 'tim.png'    },
-      { name: 'Pascal', img: 'pascal.png' },
+      { name: 'Pascal', img: 'pascal2.png' },
       { name: 'Erik',   img: 'erik.png'   },
       { name: 'Peter',  img: 'peter.png'  },
       { name: 'Luuk',   img: 'luuk.png'   },
@@ -688,6 +688,15 @@
       editingHouseId = id;
       const list = document.getElementById('prizeEditList');
       list.innerHTML = '';
+
+      // Remove prize option
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'edit-option-btn';
+      removeBtn.style.color = 'var(--text-muted)';
+      removeBtn.textContent = '✕ Verwijder prijs';
+      removeBtn.onclick = () => removePrize(id);
+      list.appendChild(removeBtn);
+
       prizes.forEach(p => {
         const btn = document.createElement('button');
         btn.className = 'edit-option-btn' + (p.claimed ? ' claimed-opt' : '');
@@ -697,6 +706,27 @@
       });
       document.getElementById('prizeEditOverlay').classList.add('active');
       document.body.style.overflow = 'hidden';
+    }
+
+    function removePrize(id) {
+      const house = houses.find(h => h.id === id);
+      if (!house) return;
+      // Free up the claimed prize
+      if (house.reward) {
+        const rewardMap = buildRewardMap();
+        prizes.forEach(p => {
+          if (rewardMap.some(r => r.label === p.label && (r.category === null || r.category === p.category))) {
+            p.claimed = false;
+          }
+        });
+      }
+      house.reward = null;
+      saveState();
+      document.getElementById('prizeEditOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+      renderHouses();
+      renderPrizes();
+      drawWheel();
     }
 
     function applyPrizeEdit(id, prize) {
