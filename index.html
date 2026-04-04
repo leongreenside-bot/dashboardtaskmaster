@@ -444,31 +444,24 @@
         name: 'House of Léon',
         image: 'images/house-leon.jpg',
         conquered: true,
-        description: 'Het koninkrijk van Léon staat bekend om zijn serene rust en strategisch inzicht. De troon werd veroverd na een epische strijd om de beste koffie in de buurt.',
-        tasks: [
-          'Taken voltooid: alle weekdoelen gehaald',
-          'Bonus challenge geclaimd',
-          'Hoogste score van de week behaald',
-        ]
+        conqueredBy: 'Luuk',
+        description: 'House of Léon is veroverd door Luuk. Een glorieuze overwinning op het rustige koninkrijk van Léon.',
+        tasks: []
       },
       {
         id: 'tim',
         name: 'House of Tim',
         image: 'images/house-tim.jpg',
-        conquered: true,
-        description: 'House of Tim ademt vastberadenheid. Tim bestormde dit huis met volle overtuiging en een gezichtsuitdrukking die geen tegenstand duldt.',
-        tasks: [
-          'Alle dagelijkse uitdagingen voltooid',
-          'Streaks bijgehouden: 14 dagen op rij',
-          'Teamchallenge gewonnen',
-        ]
+        conquered: false,
+        description: 'House of Tim is nog niet veroverd. Tim houdt de wacht met een gezichtsuitdrukking die geen tegenstand duldt.',
+        tasks: []
       },
       {
         id: 'erik',
         name: 'House of Erik',
         image: 'images/house-erik.jpg',
         conquered: false,
-        description: 'House of Erik wacht nog op zijn rechtmatige eigenaar. De taken zijn groot, de uitdaging groter.',
+        description: 'House of Erik wacht nog op zijn rechtmatige veroveraar. De taken zijn groot, de uitdaging groter.',
         tasks: []
       },
       {
@@ -476,23 +469,25 @@
         name: 'House of Luuk',
         image: 'images/house-luuk.jpg',
         conquered: false,
-        description: 'House of Luuk staat in de steigers. Luuk lacht al — maar het huis is nog niet veroverd.',
+        description: 'House of Luuk is nog niet veroverd. Luuk lacht al — maar het huis houdt stand.',
         tasks: []
       },
       {
         id: 'pascal',
         name: 'House of Pascal',
         image: 'images/house-pascal.jpg',
-        conquered: false,
-        description: 'House of Pascal wacht geduldig. De luipaard onesie is klaar voor de strijd.',
+        conquered: true,
+        conqueredBy: 'Léon',
+        description: 'House of Pascal is veroverd door Léon. De luipaard onesie kon de aanval niet stoppen.',
         tasks: []
       },
       {
         id: 'peter',
         name: 'House of Peter',
         image: 'images/house-peter.jpg',
-        conquered: false,
-        description: 'House of Peter wacht op zijn moment. Het huis staat klaar voor de strijd.',
+        conquered: true,
+        conqueredBy: 'Léon',
+        description: 'House of Peter is veroverd door Léon. Een sterke zet van Léon die zijn territorium uitbreidt.',
         tasks: []
       }
     ];
@@ -535,6 +530,7 @@
     // ── Modal ──
     function openModal(house) {
       document.getElementById('modalTitle').textContent = house.name;
+      document.getElementById('modalTag').textContent = house.conqueredBy ? `Veroverd door ${house.conqueredBy}` : 'Veroverd';
       document.getElementById('modalDescription').textContent = house.description;
 
       const img = document.getElementById('modalImage');
