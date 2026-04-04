@@ -435,6 +435,9 @@
     <!-- ── Prizes ── -->
     <div class="prizes-section">
       <h2 class="section-title">Prijzen</h2>
+      <div style="text-align:center; margin-bottom:1.5rem;">
+        <button onclick="manualReconcile()" style="background:transparent; border:1px solid rgba(152,38,39,0.4); color:var(--text-muted); font-size:0.75rem; padding:5px 14px; border-radius:20px; cursor:pointer; font-family:'Open Sans',sans-serif; transition:all 0.2s;" onmouseover="this.style.borderColor='#982627';this.style.color='#c23234'" onmouseout="this.style.borderColor='rgba(152,38,39,0.4)';this.style.color='var(--text-muted)'">↺ Herstel prijzen</button>
+      </div>
       <div class="prizes-grid">
         <div class="prize-column">
           <h3>Voor jezelf</h3>
@@ -1012,6 +1015,13 @@
         });
       }
       reconcilePrizes();
+    }
+
+    function manualReconcile() {
+      prizes.forEach(p => p.claimed = false);
+      reconcilePrizes();
+      renderPrizes();
+      drawWheel();
     }
 
     function reconcilePrizes() {
