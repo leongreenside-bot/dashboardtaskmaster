@@ -1012,16 +1012,18 @@
     }
 
     function reconcilePrizes() {
-      // Collect all rewards currently assigned to houses
-      const assignedRewards = houses
-        .filter(h => h.reward)
-        .map(h => h.reward);
-
+      const assignedRewards = houses.filter(h => h.reward).map(h => h.reward);
+      let changed = false;
       prizes.forEach(p => {
-        const labelJezelf = p.label;
-        const labelAnder  = `${p.label} (bij een ander)`;
-        p.claimed = assignedRewards.some(r => r === labelJezelf || r === labelAnder);
+        const shouldBeClaimed = assignedRewards.some(
+          r => r === p.label || r === `${p.label} (bij een ander)`
+        );
+        if (p.claimed !== shouldBeClaimed) {
+          p.claimed = shouldBeClaimed;
+          changed = true;
+        }
       });
+      if (changed) saveState();
     }
     }
 
@@ -1031,7 +1033,6 @@
       const state = snapshot.val();
       if (state) {
         applyState(state);
-        saveState(); // persist reconciled state back to Firebase
       } else {
         saveState();
       }
