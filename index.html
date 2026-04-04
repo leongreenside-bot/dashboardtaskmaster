@@ -741,15 +741,9 @@
       const house = houses.find(h => h.id === id);
       if (!house) return;
 
-      // Unmark old prize if this house already had one
-      prizes.forEach(p => {
-        const oldLabel = prize.category === 'Voor jezelf' ? house.reward : house.reward?.replace(' (bij een ander)', '');
-        if (p.label === oldLabel && p.category === prize.category) p.claimed = false;
-      });
-
       prize.claimed = true;
       house.reward  = prize.category === 'Voor jezelf'
-        ? prize.label
+        ? `${prize.label} voor jezelf`
         : `${prize.label} (bij een ander)`;
 
       saveState();
@@ -959,7 +953,7 @@
     function assignPrize(prize, house) {
       prize.claimed = true;
       house.reward = prize.category === 'Voor jezelf'
-        ? prize.label
+        ? `${prize.label} voor jezelf`
         : `${prize.label} (bij een ander)`;
 
       saveState();
@@ -1067,7 +1061,20 @@
         } else if (r.includes(' voor de ander')) {
           map.push({ label: r.replace(' voor de ander', '').trim(), category: 'Voor de ander' });
         } else {
-          map.push({ label: r.trim(), category: null });
+          // No suffix stored — infer category from the prizes list.
+          // "Voor de ander" prizes are always stored with "(bij een ander)" suffix in new code,
+          // so a bare label most likely belongs to "Voor jezelf".
+          const label = r.trim();
+          const inJezelf = prizes.some(p => p.label === label && p.category === 'Voor jezelf');
+          const inAnder  = prizes.some(p => p.label === label && p.category === 'Voor de ander');
+          if (inJezelf && !inAnder) {
+            map.push({ label, category: 'Voor jezelf' });
+          } else if (inAnder && !inJezelf) {
+            map.push({ label, category: 'Voor de ander' });
+          } else {
+            // Ambiguous: "Voor de ander" always has suffix in correct code → default to "Voor jezelf"
+            map.push({ label, category: inJezelf ? 'Voor jezelf' : null });
+          }
         }
       });
       return map;
