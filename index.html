@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>D4E Taskmaster</title>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@400;600&display=swap');
 
@@ -737,42 +739,58 @@
       if (e.key === 'Escape') { closeModal(); closePrizeOverlay(); }
     });
 
-    // ── Persistence ──────────────────────────────────────────────────────────
+    // ── Firebase ─────────────────────────────────────────────────────────────
 
-    const STORAGE_KEY = 'd4e_taskmaster_state';
+    const firebaseConfig = {
+      apiKey: "AIzaSyBVoLtCFxoedDZ5cMTuwXmDojyNRj2NA1M",
+      authDomain: "d4e-taskmaster.firebaseapp.com",
+      databaseURL: "https://d4e-taskmaster-default-rtdb.firebaseio.com",
+      projectId: "d4e-taskmaster",
+      storageBucket: "d4e-taskmaster.firebasestorage.app",
+      messagingSenderId: "1081125383524",
+      appId: "1:1081125383524:web:dde301e1ce6a8503bc5e71"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const stateRef = db.ref('state');
 
     function saveState() {
       const state = {
         houses: houses.map(h => ({ id: h.id, conquered: h.conquered, reward: h.reward || null })),
         prizes: prizes.map(p => ({ id: p.id, claimed: p.claimed }))
       };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      stateRef.set(state);
     }
 
-    function loadState() {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-      try {
-        const state = JSON.parse(raw);
-        state.houses.forEach(saved => {
-          const house = houses.find(h => h.id === saved.id);
-          if (house) {
-            house.conquered = saved.conquered;
-            if (saved.reward !== null) house.reward = saved.reward;
-          }
-        });
-        state.prizes.forEach(saved => {
-          const prize = prizes.find(p => p.id === saved.id);
-          if (prize) prize.claimed = saved.claimed;
-        });
-      } catch(e) { /* corrupt state, ignore */ }
+    function applyState(state) {
+      state.houses.forEach(saved => {
+        const house = houses.find(h => h.id === saved.id);
+        if (house) {
+          house.conquered = saved.conquered;
+          if (saved.reward !== null) house.reward = saved.reward;
+        }
+      });
+      state.prizes.forEach(saved => {
+        const prize = prizes.find(p => p.id === saved.id);
+        if (prize) prize.claimed = saved.claimed;
+      });
     }
 
     // ── Init ──────────────────────────────────────────────────────────────────
-    loadState();
-    renderHouses();
-    renderPrizes();
-    drawWheel();
+    // Listen for real-time updates from Firebase
+    stateRef.on('value', snapshot => {
+      const state = snapshot.val();
+      if (state) {
+        applyState(state);
+      } else {
+        // First time: push default state to Firebase
+        saveState();
+      }
+      renderHouses();
+      renderPrizes();
+      drawWheel();
+    });
   </script>
 </body>
 </html>
