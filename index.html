@@ -241,6 +241,13 @@
       color: var(--gold);
     }
 
+    .card-footer .house-reward {
+      font-size: 0.72rem;
+      margin-top: 4px;
+      color: var(--text-main);
+      font-style: italic;
+    }
+
     /* click hint */
     .click-hint {
       display: flex;
@@ -444,6 +451,7 @@
         name: 'House of Léon',
         image: 'house-leon.png',
         modalImage: 'luuk.png',
+        reward: 'Opnieuw voor jezelf',
         conquered: true,
         conqueredBy: 'Luuk',
         description: 'House of Léon is veroverd door Luuk. Een glorieuze overwinning op het rustige koninkrijk van Léon.',
@@ -478,6 +486,7 @@
         name: 'House of Pascal',
         image: 'house-pascal.png',
         modalImage: 'leon.png',
+        reward: 'Blokken attribuut',
         conquered: true,
         conqueredBy: 'Léon',
         description: 'House of Pascal is veroverd door Léon. De luipaard onesie kon de aanval niet stoppen.',
@@ -488,6 +497,7 @@
         name: 'House of Peter',
         image: 'house-peter.png',
         modalImage: 'leon.png',
+        reward: 'Metertje Opzij (bij een ander)',
         conquered: true,
         conqueredBy: 'Léon',
         description: 'House of Peter is veroverd door Léon. Een sterke zet van Léon die zijn territorium uitbreidt.',
@@ -519,6 +529,7 @@
         <div class="card-footer">
           <div class="house-name">${house.name}</div>
           <div class="house-status">${house.conquered ? 'Veroverd ✦' : 'Nog niet veroverd'}</div>
+          ${house.reward ? `<div class="house-reward">Beloning: ${house.reward}</div>` : ''}
           ${house.conquered ? '<div class="click-hint">&#9432; Klik voor details</div>' : ''}
         </div>
       `;
