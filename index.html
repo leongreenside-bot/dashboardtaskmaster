@@ -1017,28 +1017,42 @@
       reconcilePrizes();
     }
 
+    function buildRewardMap() {
+      const map = [];
+      houses.filter(h => h.reward).forEach(h => {
+        const r = h.reward;
+        if (r.includes(' voor jezelf')) {
+          map.push({ label: r.replace(' voor jezelf', '').trim(), category: 'Voor jezelf' });
+        } else if (r.includes(' (bij een ander)')) {
+          map.push({ label: r.replace(' (bij een ander)', '').trim(), category: 'Voor de ander' });
+        } else if (r.includes(' voor de ander')) {
+          map.push({ label: r.replace(' voor de ander', '').trim(), category: 'Voor de ander' });
+        } else {
+          map.push({ label: r.trim(), category: null });
+        }
+      });
+      return map;
+    }
+
     function manualReconcile() {
-      prizes.forEach(p => p.claimed = false);
-      reconcilePrizes();
+      const rewardMap = buildRewardMap();
+      prizes.forEach(p => {
+        p.claimed = rewardMap.some(r =>
+          r.label === p.label && (r.category === null || r.category === p.category)
+        );
+      });
+      saveState();
       renderPrizes();
       drawWheel();
     }
 
     function reconcilePrizes() {
-      // Normalize reward strings to bare label for matching
-      const normalize = r => r
-        .replace(' voor jezelf', '')
-        .replace(' (bij een ander)', '')
-        .replace(' voor de ander', '')
-        .trim();
-
-      const assignedLabels = houses
-        .filter(h => h.reward)
-        .map(h => normalize(h.reward));
-
+      const rewardMap = buildRewardMap();
       let changed = false;
       prizes.forEach(p => {
-        const shouldBeClaimed = assignedLabels.includes(p.label);
+        const shouldBeClaimed = rewardMap.some(r =>
+          r.label === p.label && (r.category === null || r.category === p.category)
+        );
         if (p.claimed !== shouldBeClaimed) {
           p.claimed = shouldBeClaimed;
           changed = true;
