@@ -1015,12 +1015,20 @@
     }
 
     function reconcilePrizes() {
-      const assignedRewards = houses.filter(h => h.reward).map(h => h.reward);
+      // Normalize reward strings to bare label for matching
+      const normalize = r => r
+        .replace(' voor jezelf', '')
+        .replace(' (bij een ander)', '')
+        .replace(' voor de ander', '')
+        .trim();
+
+      const assignedLabels = houses
+        .filter(h => h.reward)
+        .map(h => normalize(h.reward));
+
       let changed = false;
       prizes.forEach(p => {
-        const shouldBeClaimed = assignedRewards.some(
-          r => r === p.label || r === `${p.label} (bij een ander)`
-        );
+        const shouldBeClaimed = assignedLabels.includes(p.label);
         if (p.claimed !== shouldBeClaimed) {
           p.claimed = shouldBeClaimed;
           changed = true;
