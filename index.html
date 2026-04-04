@@ -74,6 +74,15 @@
       text-align: center; text-transform: uppercase; margin-bottom: 2.5rem;
     }
 
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      letter-spacing: 0.1em; color: var(--red-light);
+      text-align: center; text-transform: uppercase;
+      text-shadow: 0 0 30px rgba(152,38,39,0.4), 0 2px 4px rgba(0,0,0,0.8);
+      margin-bottom: 2rem;
+    }
+
     /* ── Houses grid ── */
     .houses-grid {
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.8rem;
@@ -324,7 +333,7 @@
 
     <!-- ── Prizes ── -->
     <div class="prizes-section">
-      <p class="section-label">Prijzen</p>
+      <h2 class="section-title">Prijzen</h2>
       <div class="prizes-grid">
         <div class="prize-column">
           <h3>Voor jezelf</h3>
@@ -339,7 +348,7 @@
 
     <!-- ── Wheel ── -->
     <div class="wheel-section">
-      <p class="section-label">Rad van Fortuin</p>
+      <h2 class="section-title">Rad van Fortuin</h2>
       <div id="wheelContainer">
         <div class="wheel-wrapper">
           <div class="wheel-pointer"></div>
@@ -542,6 +551,59 @@
       ctx.stroke();
     }
 
+    // ── Music ─────────────────────────────────────────────────────────────────
+
+    let audioCtx = null;
+    let musicNodes = [];
+
+    function playSpinMusic() {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const master = audioCtx.createGain();
+      master.gain.value = 0.18;
+      master.connect(audioCtx.destination);
+
+      // Fun circus-like ascending arpeggio pattern
+      const melody = [
+        523, 659, 784, 1047, 784, 659,
+        587, 740, 880, 1175, 880, 740,
+        659, 831, 988, 1319, 988, 831,
+        523, 659, 784, 1047, 784, 659,
+        698, 880, 1047, 1397, 1047, 880,
+        784, 988, 1175, 1568, 1175, 988,
+        523, 659, 784, 1047, 784, 659,
+        523, 659, 784, 1047, 784, 659,
+      ];
+
+      const noteDuration = 0.12;
+      const startTime    = audioCtx.currentTime + 0.05;
+
+      melody.forEach((freq, i) => {
+        const osc  = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = i % 3 === 0 ? 'triangle' : 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, startTime + i * noteDuration);
+        gain.gain.linearRampToValueAtTime(0.9, startTime + i * noteDuration + 0.02);
+        gain.gain.linearRampToValueAtTime(0, startTime + i * noteDuration + noteDuration * 0.85);
+        osc.connect(gain);
+        gain.connect(master);
+        osc.start(startTime + i * noteDuration);
+        osc.stop(startTime + i * noteDuration + noteDuration);
+        musicNodes.push(osc);
+      });
+    }
+
+    function stopSpinMusic() {
+      if (audioCtx) {
+        // Fade out master and close
+        try { audioCtx.close(); } catch(e) {}
+        audioCtx = null;
+        musicNodes = [];
+      }
+    }
+
+    // ── Spin ──────────────────────────────────────────────────────────────────
+
     function spinWheel() {
       if (isSpinning) return;
       const available = getAvailablePrizes();
@@ -552,24 +614,27 @@
       const canvas = document.getElementById('wheelCanvas');
       canvas.classList.add('spinning');
 
-      const extraSpins   = 5 + Math.floor(Math.random() * 5); // 5–9 full rotations
+      playSpinMusic();
+
+      const spinDuration = 9000; // ms
+      const extraSpins   = 10 + Math.floor(Math.random() * 6); // 10–15 full rotations
       const arc          = 360 / available.length;
       const winnerIndex  = Math.floor(Math.random() * available.length);
-      // Position winner segment under pointer (top = -90°)
       const targetAngle  = 360 - (winnerIndex * arc + arc / 2);
       const totalRotation = currentRotation + extraSpins * 360 + targetAngle - (currentRotation % 360);
 
-      canvas.style.transition = 'transform 5s cubic-bezier(0.17, 0.67, 0.12, 0.99)';
+      canvas.style.transition = `transform ${spinDuration / 1000}s cubic-bezier(0.1, 0.6, 0.1, 1)`;
       canvas.style.transform  = `rotate(${totalRotation}deg)`;
       currentRotation = totalRotation;
 
       setTimeout(() => {
+        stopSpinMusic();
         isSpinning = false;
         canvas.classList.remove('spinning');
         document.getElementById('spinBtn').disabled = false;
         pendingPrize = available[winnerIndex];
         showPrizeResult(pendingPrize);
-      }, 5200);
+      }, spinDuration + 300);
     }
 
     function showPrizeResult(prize) {
