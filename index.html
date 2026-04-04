@@ -443,6 +443,7 @@
         id: 'leon',
         name: 'House of Léon',
         image: 'house-leon.png',
+        modalImage: 'house-luuk.png',
         conquered: true,
         conqueredBy: 'Luuk',
         description: 'House of Léon is veroverd door Luuk. Een glorieuze overwinning op het rustige koninkrijk van Léon.',
@@ -468,14 +469,17 @@
         id: 'luuk',
         name: 'House of Luuk',
         image: 'house-luuk.png',
-        conquered: false,
-        description: 'House of Luuk is nog niet veroverd. Luuk lacht al — maar het huis houdt stand.',
+        modalImage: 'house-leon.png',
+        conquered: true,
+        conqueredBy: 'Léon',
+        description: 'House of Luuk is veroverd door Léon.',
         tasks: []
       },
       {
         id: 'pascal',
         name: 'House of Pascal',
         image: 'house-pascal.png',
+        modalImage: 'house-leon.png',
         conquered: true,
         conqueredBy: 'Léon',
         description: 'House of Pascal is veroverd door Léon. De luipaard onesie kon de aanval niet stoppen.',
@@ -534,8 +538,9 @@
       document.getElementById('modalDescription').textContent = house.description;
 
       const img = document.getElementById('modalImage');
-      if (house.image) {
-        img.src = house.image;
+      const imgSrc = house.modalImage || house.image;
+      if (imgSrc) {
+        img.src = imgSrc;
         img.alt = house.name;
         img.style.display = 'block';
       } else {
