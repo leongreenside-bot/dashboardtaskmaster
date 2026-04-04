@@ -7,16 +7,12 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@400;600&display=swap');
 
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --gold: #982627;
-      --gold-light: #c23234;
-      --gold-dark: #6b1a1b;
+      --red: #982627;
+      --red-light: #c23234;
+      --red-dark: #6b1a1b;
       --bg-dark: #0d0d12;
       --bg-card: #1a1a24;
       --text-main: #f0e8d0;
@@ -34,362 +30,272 @@
     }
 
     /* ── Header ── */
-    header {
-      text-align: center;
-      padding: 3rem 1.5rem 2rem;
-    }
+    header { text-align: center; padding: 3rem 1.5rem 2rem; }
 
     .logo-line {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1.2rem;
-      margin-bottom: 0.6rem;
+      display: flex; align-items: center; justify-content: center;
+      gap: 1.2rem; margin-bottom: 0.6rem;
     }
-
     .logo-line .divider {
-      height: 2px;
-      width: 60px;
-      background: linear-gradient(90deg, transparent, var(--gold));
-      flex-shrink: 0;
+      height: 2px; width: 60px;
+      background: linear-gradient(90deg, transparent, var(--red)); flex-shrink: 0;
     }
-
-    .logo-line .divider.right {
-      background: linear-gradient(90deg, var(--gold), transparent);
-    }
+    .logo-line .divider.right { background: linear-gradient(90deg, var(--red), transparent); }
 
     h1 {
       font-family: 'Bebas Neue', sans-serif;
       font-size: clamp(2.2rem, 6vw, 4rem);
-      font-weight: 900;
       letter-spacing: 0.08em;
-      color: var(--gold-light);
-      text-shadow: 0 0 40px rgba(201,162,39,0.4), 0 2px 4px rgba(0,0,0,0.8);
+      color: var(--red-light);
+      text-shadow: 0 0 40px rgba(152,38,39,0.4), 0 2px 4px rgba(0,0,0,0.8);
     }
 
     .subtitle-bar {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
+      display: flex; align-items: center; justify-content: center;
+      gap: 1rem; margin-bottom: 1.5rem;
     }
-
-    .subtitle-bar hr {
-      flex: 1;
-      max-width: 120px;
-      border: none;
-      border-top: 1px solid var(--gold-dark);
-    }
-
+    .subtitle-bar hr { flex: 1; max-width: 120px; border: none; border-top: 1px solid var(--red-dark); }
     .subtitle-bar span {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 0.75rem;
-      letter-spacing: 0.3em;
-      color: var(--gold);
-      text-transform: uppercase;
+      font-family: 'Bebas Neue', sans-serif; font-size: 0.85rem;
+      letter-spacing: 0.3em; color: var(--red); text-transform: uppercase;
     }
 
     .intro-text {
-      max-width: 680px;
-      margin: 0 auto;
-      font-size: 1.05rem;
-      line-height: 1.75;
-      color: #c8bfa8;
-      text-align: center;
+      max-width: 680px; margin: 0 auto;
+      font-size: 1.05rem; line-height: 1.75; color: #c8bfa8; text-align: center;
+    }
+
+    /* ── Main sections ── */
+    main { max-width: 1200px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+    .section-label {
+      font-family: 'Bebas Neue', sans-serif; font-size: 0.8rem;
+      letter-spacing: 0.35em; color: var(--red-dark);
+      text-align: center; text-transform: uppercase; margin-bottom: 2.5rem;
     }
 
     /* ── Houses grid ── */
-    main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2.5rem 1.5rem 4rem;
-    }
-
-    .section-label {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 0.7rem;
-      letter-spacing: 0.35em;
-      color: var(--gold-dark);
-      text-align: center;
-      text-transform: uppercase;
-      margin-bottom: 2.5rem;
-    }
-
     .houses-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.8rem;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.8rem;
     }
-
-    @media (max-width: 900px) {
-      .houses-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    @media (max-width: 560px) {
-      .houses-grid { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 900px) { .houses-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .houses-grid { grid-template-columns: 1fr; } }
 
     /* ── House card ── */
     .house-card {
-      border-radius: 12px;
-      overflow: hidden;
-      background: var(--bg-card);
-      border: 1px solid rgba(201,162,39,0.15);
-      position: relative;
+      border-radius: 12px; overflow: hidden; background: var(--bg-card);
+      border: 1px solid rgba(152,38,39,0.15); position: relative;
       transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
-
-    .house-card.conquered {
-      cursor: pointer;
-      border-color: rgba(201,162,39,0.4);
-    }
-
+    .house-card.conquered { cursor: pointer; border-color: rgba(152,38,39,0.4); }
     .house-card.conquered:hover {
       transform: translateY(-6px) scale(1.02);
-      box-shadow:
-        0 16px 40px rgba(0,0,0,0.6),
-        0 0 20px rgba(201,162,39,0.25),
-        inset 0 0 0 1px rgba(201,162,39,0.6);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.6), 0 0 20px rgba(152,38,39,0.25),
+        inset 0 0 0 1px rgba(152,38,39,0.6);
     }
-
-    .house-card.locked {
-      cursor: not-allowed;
-      opacity: 0.75;
-    }
+    .house-card.locked { cursor: not-allowed; opacity: 0.75; }
 
     .card-image-wrap {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 3 / 4;
-      overflow: hidden;
-      background: #111;
+      position: relative; width: 100%; aspect-ratio: 3 / 4; overflow: hidden; background: #111;
     }
-
     .card-image-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: filter 0.4s ease;
+      width: 100%; height: 100%; object-fit: cover; display: block; transition: filter 0.4s ease;
     }
+    .house-card.locked .card-image-wrap img { filter: grayscale(100%) brightness(0.7); }
 
-    .house-card.locked .card-image-wrap img {
-      filter: grayscale(100%) brightness(0.7);
-    }
-
-    /* conquered badge */
     .badge-conquered {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: var(--gold);
-      color: #000;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 0.6rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      padding: 4px 10px;
-      border-radius: 20px;
-      text-transform: uppercase;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      position: absolute; top: 10px; right: 10px; background: var(--red);
+      color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 0.7rem;
+      font-weight: 700; letter-spacing: 0.15em; padding: 4px 10px;
+      border-radius: 20px; text-transform: uppercase; box-shadow: 0 2px 8px rgba(0,0,0,0.5);
     }
 
-    /* locked icon overlay */
     .lock-overlay {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0,0,0,0.25);
+      position: absolute; inset: 0; display: flex;
+      align-items: center; justify-content: center; background: rgba(0,0,0,0.25);
     }
-
     .lock-overlay svg {
-      width: 52px;
-      height: 52px;
-      fill: #982627;
+      width: 52px; height: 52px; fill: #982627;
       filter: drop-shadow(0 2px 8px rgba(152,38,39,0.5));
     }
 
-    /* Card footer */
-    .card-footer {
-      padding: 0.9rem 1rem;
-      text-align: center;
-      border-top: 1px solid rgba(201,162,39,0.1);
-    }
-
+    .card-footer { padding: 0.9rem 1rem; text-align: center; border-top: 1px solid rgba(152,38,39,0.1); }
     .card-footer .house-name {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 0.85rem;
-      letter-spacing: 0.12em;
-      color: var(--gold-light);
-      text-transform: uppercase;
+      font-family: 'Bebas Neue', sans-serif; font-size: 0.95rem;
+      letter-spacing: 0.12em; color: var(--red-light); text-transform: uppercase;
     }
-
-    .house-card.locked .card-footer .house-name {
-      color: var(--text-muted);
-    }
-
-    .card-footer .house-status {
-      font-size: 0.72rem;
-      margin-top: 3px;
-      color: var(--text-muted);
-    }
-
-    .house-card.conquered .card-footer .house-status {
-      color: var(--gold);
-    }
-
+    .house-card.locked .card-footer .house-name { color: var(--text-muted); }
+    .card-footer .house-status { font-size: 0.72rem; margin-top: 3px; color: var(--text-muted); }
+    .house-card.conquered .card-footer .house-status { color: var(--red); }
     .card-footer .house-reward {
-      font-size: 0.72rem;
-      margin-top: 4px;
-      color: var(--text-main);
-      font-style: italic;
+      font-size: 0.72rem; margin-top: 4px; color: var(--text-main); font-style: italic;
     }
-
-    /* click hint */
     .click-hint {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      margin-top: 6px;
-      font-size: 0.7rem;
-      color: rgba(201,162,39,0.6);
-      opacity: 0;
-      transition: opacity 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 5px;
+      margin-top: 6px; font-size: 0.7rem; color: rgba(152,38,39,0.6);
+      opacity: 0; transition: opacity 0.2s;
+    }
+    .house-card.conquered:hover .click-hint { opacity: 1; }
+
+    /* ── Prizes section ── */
+    .prizes-section { margin-top: 4rem; }
+    .prizes-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 700px; margin: 0 auto;
+    }
+    @media (max-width: 560px) { .prizes-grid { grid-template-columns: 1fr; } }
+
+    .prize-column {
+      background: var(--bg-card); border: 1px solid rgba(152,38,39,0.2);
+      border-radius: 12px; padding: 1.5rem;
+    }
+    .prize-column h3 {
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem;
+      letter-spacing: 0.15em; color: var(--red-light);
+      margin-bottom: 1rem; text-transform: uppercase;
+      border-bottom: 1px solid rgba(152,38,39,0.2); padding-bottom: 0.6rem;
+    }
+    .prize-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .prize-list li {
+      font-size: 0.9rem; color: var(--text-main);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .prize-list li::before { content: '▸'; color: var(--red); flex-shrink: 0; }
+    .prize-list li.claimed { color: var(--text-muted); text-decoration: line-through; }
+    .prize-list li.claimed::before { color: var(--text-muted); }
+
+    /* ── Wheel section ── */
+    .wheel-section { margin-top: 4rem; text-align: center; }
+    .wheel-wrapper {
+      position: relative; display: inline-block; margin-top: 1.5rem;
+    }
+    .wheel-pointer {
+      position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
+      width: 0; height: 0;
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+      border-top: 28px solid var(--red-light);
+      z-index: 10;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    }
+    #wheelCanvas {
+      display: block; border-radius: 50%;
+      box-shadow: 0 0 40px rgba(152,38,39,0.3), 0 8px 32px rgba(0,0,0,0.6);
+      cursor: pointer; transition: box-shadow 0.2s;
+    }
+    #wheelCanvas:hover { box-shadow: 0 0 60px rgba(152,38,39,0.5), 0 8px 32px rgba(0,0,0,0.6); }
+    #wheelCanvas.spinning { cursor: not-allowed; }
+
+    .spin-btn {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      margin-top: 1.5rem; padding: 0.9rem 2.5rem;
+      background: var(--red); border: none; border-radius: 8px;
+      color: #fff; font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem; letter-spacing: 0.2em; cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      box-shadow: 0 4px 16px rgba(152,38,39,0.4);
+    }
+    .spin-btn:hover { background: var(--red-light); transform: translateY(-2px); }
+    .spin-btn:active { transform: translateY(0); }
+    .spin-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .no-prizes-msg {
+      color: var(--text-muted); font-style: italic; margin-top: 1.5rem; font-size: 0.95rem;
     }
 
-    .house-card.conquered:hover .click-hint {
-      opacity: 1;
-    }
-
-    /* ── Modal ── */
+    /* ── House modal ── */
     .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.75);
-      backdrop-filter: blur(4px);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(4px); z-index: 100;
+      align-items: center; justify-content: center; padding: 1.5rem;
     }
-
-    .modal-overlay.active {
-      display: flex;
-    }
-
+    .modal-overlay.active { display: flex; }
     .modal {
-      background: var(--bg-card);
-      border: 1px solid rgba(201,162,39,0.4);
-      border-radius: 16px;
-      max-width: 520px;
-      width: 100%;
-      max-height: 90vh;
+      background: var(--bg-card); border: 1px solid rgba(152,38,39,0.4);
+      border-radius: 16px; max-width: 520px; width: 100%; max-height: 90vh;
       overflow-y: auto;
-      box-shadow: 0 24px 80px rgba(0,0,0,0.8), 0 0 40px rgba(201,162,39,0.1);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.8), 0 0 40px rgba(152,38,39,0.1);
       animation: modalIn 0.28s cubic-bezier(0.34,1.4,0.64,1);
     }
-
     @keyframes modalIn {
       from { opacity: 0; transform: scale(0.92) translateY(16px); }
       to   { opacity: 1; transform: scale(1) translateY(0); }
     }
-
-    .modal-image {
-      width: 100%;
-      max-height: 320px;
-      object-fit: cover;
-      border-radius: 14px 14px 0 0;
-    }
-
-    .modal-body {
-      padding: 1.8rem 2rem 2rem;
-    }
-
+    .modal-image { width: 100%; max-height: 320px; object-fit: cover; border-radius: 14px 14px 0 0; }
+    .modal-body { padding: 1.8rem 2rem 2rem; }
     .modal-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--gold-light);
-      margin-bottom: 0.4rem;
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem;
+      color: var(--red-light); margin-bottom: 0.4rem;
     }
-
     .modal-tag {
-      display: inline-block;
-      background: rgba(201,162,39,0.15);
-      border: 1px solid var(--gold-dark);
-      color: var(--gold);
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      padding: 3px 10px;
-      border-radius: 20px;
-      text-transform: uppercase;
-      font-family: 'Bebas Neue', sans-serif;
-      margin-bottom: 1.2rem;
+      display: inline-block; background: rgba(152,38,39,0.15);
+      border: 1px solid var(--red-dark); color: var(--red);
+      font-size: 0.7rem; letter-spacing: 0.2em; padding: 3px 10px;
+      border-radius: 20px; text-transform: uppercase;
+      font-family: 'Bebas Neue', sans-serif; margin-bottom: 1.2rem;
     }
-
-    .modal-description {
-      font-size: 0.95rem;
-      line-height: 1.7;
-      color: #c0b8a8;
-      margin-bottom: 1.5rem;
-    }
-
-    .modal-tasks {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      margin-bottom: 1.8rem;
-    }
-
-    .modal-tasks li {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.7rem;
-      font-size: 0.9rem;
-      color: var(--text-main);
-    }
-
-    .modal-tasks li::before {
-      content: '▸';
-      color: var(--gold);
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-
+    .modal-description { font-size: 0.95rem; line-height: 1.7; color: #c0b8a8; margin-bottom: 1.5rem; }
     .modal-close {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      width: 100%;
-      padding: 0.85rem;
-      background: transparent;
-      border: 1px solid rgba(201,162,39,0.35);
-      border-radius: 8px;
-      color: var(--gold);
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 0.8rem;
-      letter-spacing: 0.15em;
-      cursor: pointer;
-      transition: background 0.2s, border-color 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      width: 100%; padding: 0.85rem; background: transparent;
+      border: 1px solid rgba(152,38,39,0.35); border-radius: 8px;
+      color: var(--red); font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.9rem; letter-spacing: 0.15em; cursor: pointer;
+      transition: background 0.2s, border-color 0.2s; text-transform: uppercase;
+    }
+    .modal-close:hover { background: rgba(152,38,39,0.12); border-color: var(--red); }
+
+    /* ── Prize result overlay ── */
+    .prize-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(6px); z-index: 200;
+      align-items: center; justify-content: center; padding: 1.5rem;
+    }
+    .prize-overlay.active { display: flex; }
+    .prize-result-box {
+      background: var(--bg-card); border: 2px solid var(--red);
+      border-radius: 20px; max-width: 480px; width: 100%;
+      padding: 2.5rem 2rem; text-align: center;
+      box-shadow: 0 0 60px rgba(152,38,39,0.4), 0 24px 80px rgba(0,0,0,0.8);
+      animation: modalIn 0.35s cubic-bezier(0.34,1.4,0.64,1);
+    }
+    .prize-result-label {
+      font-family: 'Bebas Neue', sans-serif; font-size: 0.85rem;
+      letter-spacing: 0.3em; color: var(--red); text-transform: uppercase; margin-bottom: 0.5rem;
+    }
+    .prize-result-name {
+      font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 6vw, 3rem);
+      color: #fff; line-height: 1.1; margin-bottom: 0.3rem;
+    }
+    .prize-result-cat {
+      font-size: 0.8rem; color: var(--text-muted); margin-bottom: 2rem; font-style: italic;
+    }
+    .prize-result-box h4 {
+      font-family: 'Bebas Neue', sans-serif; font-size: 0.9rem;
+      letter-spacing: 0.2em; color: var(--red-light); margin-bottom: 1rem;
       text-transform: uppercase;
     }
-
-    .modal-close:hover {
-      background: rgba(201,162,39,0.12);
-      border-color: var(--gold);
+    .house-assign-list {
+      display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem;
     }
+    .house-assign-btn {
+      padding: 0.7rem 1rem; background: rgba(152,38,39,0.1);
+      border: 1px solid rgba(152,38,39,0.3); border-radius: 8px;
+      color: var(--text-main); font-size: 0.9rem; cursor: pointer;
+      transition: background 0.2s, border-color 0.2s; text-align: left;
+      font-family: 'Open Sans', sans-serif;
+    }
+    .house-assign-btn:hover { background: rgba(152,38,39,0.25); border-color: var(--red); }
+    .prize-overlay-close {
+      background: transparent; border: 1px solid rgba(152,38,39,0.35); border-radius: 8px;
+      color: var(--text-muted); font-size: 0.8rem; padding: 0.6rem 1.5rem;
+      cursor: pointer; font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.15em; text-transform: uppercase; transition: border-color 0.2s, color 0.2s;
+    }
+    .prize-overlay-close:hover { border-color: var(--red); color: var(--red); }
 
-    /* scrollbar */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--gold-dark); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb { background: var(--red-dark); border-radius: 3px; }
   </style>
 </head>
 <body>
@@ -401,11 +307,9 @@
       <h1>D4E Taskmaster</h1>
       <div class="divider right"></div>
     </div>
-
     <div class="subtitle-bar">
       <hr /><span>Verovert de huizen</span><hr />
     </div>
-
     <p class="intro-text">
       Welkom bij D4E Taskmaster. Hieronder zie je de zes huizen die veroverd moeten worden.
       Klik op een veroverd huis voor meer informatie. Huizen die nog niet veroverd zijn,
@@ -416,155 +320,305 @@
   <!-- ── Main ── -->
   <main>
     <p class="section-label">De huizen</p>
+    <div class="houses-grid" id="housesGrid"></div>
 
-    <div class="houses-grid" id="housesGrid">
-      <!-- Cards worden via JavaScript ingeladen -->
+    <!-- ── Prizes ── -->
+    <div class="prizes-section">
+      <p class="section-label">Prijzen</p>
+      <div class="prizes-grid">
+        <div class="prize-column">
+          <h3>Voor jezelf</h3>
+          <ul class="prize-list" id="prizeListJezelf"></ul>
+        </div>
+        <div class="prize-column">
+          <h3>Voor de ander</h3>
+          <ul class="prize-list" id="prizeListAnder"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Wheel ── -->
+    <div class="wheel-section">
+      <p class="section-label">Rad van Fortuin</p>
+      <div id="wheelContainer">
+        <div class="wheel-wrapper">
+          <div class="wheel-pointer"></div>
+          <canvas id="wheelCanvas" width="420" height="420"></canvas>
+        </div>
+        <br/>
+        <button class="spin-btn" id="spinBtn" onclick="spinWheel()">&#9654; Draaien</button>
+      </div>
+      <p class="no-prizes-msg" id="noPrizesMsg" style="display:none">Alle prijzen zijn al geclaimd!</p>
     </div>
   </main>
 
-  <!-- ── Modal ── -->
+  <!-- ── House modal ── -->
   <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true">
-    <div class="modal" id="modal">
+    <div class="modal">
       <img class="modal-image" id="modalImage" src="" alt="" />
       <div class="modal-body">
         <div class="modal-title" id="modalTitle"></div>
         <div class="modal-tag" id="modalTag">Veroverd</div>
         <p class="modal-description" id="modalDescription"></p>
-        <ul class="modal-tasks" id="modalTasks"></ul>
         <button class="modal-close" onclick="closeModal()">&#x2715; &nbsp; Sluiten</button>
       </div>
     </div>
   </div>
 
+  <!-- ── Prize result overlay ── -->
+  <div class="prize-overlay" id="prizeOverlay">
+    <div class="prize-result-box">
+      <div class="prize-result-label">🎉 Gewonnen!</div>
+      <div class="prize-result-name" id="prizeResultName"></div>
+      <div class="prize-result-cat" id="prizeResultCat"></div>
+      <h4>Toewijzen aan huis</h4>
+      <div class="house-assign-list" id="houseAssignList"></div>
+      <button class="prize-overlay-close" onclick="closePrizeOverlay()">Annuleren</button>
+    </div>
+  </div>
+
   <script>
-    /**
-     * Huizen data
-     * ──────────
-     * conquered: true  = full colour, klikbaar
-     * conquered: false = grijstinten, vergrendeld
-     *
-     * Voeg je afbeeldingen toe in de map /images/ met de bestandsnaam zoals hieronder.
-     */
+    // ── Data ──────────────────────────────────────────────────────────────────
+
     const houses = [
       {
-        id: 'leon',
-        name: 'House of Léon',
-        image: 'house-leon.png',
-        modalImage: 'luuk.png',
-        reward: 'Opnieuw voor jezelf',
-        conquered: true,
-        conqueredBy: 'Luuk',
-        description: 'House of Léon is veroverd door Luuk. Een glorieuze overwinning op het rustige koninkrijk van Léon.',
-        tasks: []
+        id: 'leon', name: 'House of Léon', image: 'house-leon.png', modalImage: 'luuk.png',
+        conquered: true, conqueredBy: 'Luuk', reward: 'Opnieuw voor jezelf',
+        description: 'House of Léon is veroverd door Luuk. Een glorieuze overwinning op het rustige koninkrijk van Léon.'
       },
       {
-        id: 'tim',
-        name: 'House of Tim',
-        image: 'house-tim.png',
-        conquered: false,
-        description: 'House of Tim is nog niet veroverd. Tim houdt de wacht met een gezichtsuitdrukking die geen tegenstand duldt.',
-        tasks: []
+        id: 'tim', name: 'House of Tim', image: 'house-tim.png',
+        conquered: false, description: 'House of Tim is nog niet veroverd.'
       },
       {
-        id: 'erik',
-        name: 'House of Erik',
-        image: 'house-erik.png',
-        conquered: false,
-        description: 'House of Erik wacht nog op zijn rechtmatige veroveraar. De taken zijn groot, de uitdaging groter.',
-        tasks: []
+        id: 'erik', name: 'House of Erik', image: 'house-erik.png',
+        conquered: false, description: 'House of Erik wacht nog op zijn rechtmatige veroveraar.'
       },
       {
-        id: 'luuk',
-        name: 'House of Luuk',
-        image: 'house-luuk.png',
-        conquered: false,
-        description: 'House of Luuk is nog niet veroverd. Luuk lacht al — maar het huis houdt stand.',
-        tasks: []
+        id: 'luuk', name: 'House of Luuk', image: 'house-luuk.png',
+        conquered: false, description: 'House of Luuk is nog niet veroverd.'
       },
       {
-        id: 'pascal',
-        name: 'House of Pascal',
-        image: 'house-pascal.png',
-        modalImage: 'leon.png',
-        reward: 'Blokken attribuut',
-        conquered: true,
-        conqueredBy: 'Léon',
-        description: 'House of Pascal is veroverd door Léon. De luipaard onesie kon de aanval niet stoppen.',
-        tasks: []
+        id: 'pascal', name: 'House of Pascal', image: 'house-pascal.png', modalImage: 'leon.png',
+        conquered: true, conqueredBy: 'Léon', reward: 'Blokken attribuut',
+        description: 'House of Pascal is veroverd door Léon. De luipaard onesie kon de aanval niet stoppen.'
       },
       {
-        id: 'peter',
-        name: 'House of Peter',
-        image: 'house-peter.png',
-        modalImage: 'leon.png',
-        reward: 'Metertje Opzij (bij een ander)',
-        conquered: true,
-        conqueredBy: 'Léon',
-        description: 'House of Peter is veroverd door Léon. Een sterke zet van Léon die zijn territorium uitbreidt.',
-        tasks: []
+        id: 'peter', name: 'House of Peter', image: 'house-peter.png', modalImage: 'leon.png',
+        conquered: true, conqueredBy: 'Léon', reward: 'Metertje Opzij (bij een ander)',
+        description: 'House of Peter is veroverd door Léon. Een sterke zet van Léon die zijn territorium uitbreidt.'
       }
     ];
 
-    // ── Render houses ──
-    const grid = document.getElementById('housesGrid');
+    // Prize IDs link to prize objects for cross-referencing
+    const prizes = [
+      { id: 'vj1', label: 'Opnieuw',         category: 'Voor jezelf',   claimed: true  },
+      { id: 'vj2', label: 'Metertje Opzij',  category: 'Voor jezelf',   claimed: false },
+      { id: 'vj3', label: 'Attribuut extra', category: 'Voor jezelf',   claimed: false },
+      { id: 'vda1', label: 'Opnieuw',         category: 'Voor de ander', claimed: false },
+      { id: 'vda2', label: 'Metertje Opzij',  category: 'Voor de ander', claimed: true  },
+      { id: 'vda3', label: 'Blokken attribuut', category: 'Voor de ander', claimed: true },
+    ];
 
-    houses.forEach(house => {
-      const card = document.createElement('div');
-      card.className = `house-card ${house.conquered ? 'conquered' : 'locked'}`;
+    // ── Render houses ─────────────────────────────────────────────────────────
 
-      const imgSrc = house.image || 'images/placeholder.png';
+    function renderHouses() {
+      const grid = document.getElementById('housesGrid');
+      grid.innerHTML = '';
+      houses.forEach(house => {
+        const card = document.createElement('div');
+        card.className = `house-card ${house.conquered ? 'conquered' : 'locked'}`;
+        card.innerHTML = `
+          <div class="card-image-wrap">
+            <img src="${house.image}" alt="${house.name}"
+              onerror="this.style.background='#1e1e2e';this.style.minHeight='200px';this.removeAttribute('src')" />
+            ${house.conquered
+              ? '<div class="badge-conquered">Veroverd</div>'
+              : `<div class="lock-overlay">
+                  <svg viewBox="0 0 24 24"><path d="M18 8h-1V6A5 5 0 0 0 7 6v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zm-6 9a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm3.1-9H8.9V6a3.1 3.1 0 0 1 6.2 0v2z"/></svg>
+                </div>`
+            }
+          </div>
+          <div class="card-footer">
+            <div class="house-name">${house.name}</div>
+            <div class="house-status">${house.conquered ? 'Veroverd ✦' : 'Nog niet veroverd'}</div>
+            ${house.reward ? `<div class="house-reward">Prijs: ${house.reward}</div>` : ''}
+            ${house.conquered ? '<div class="click-hint">&#9432; Klik voor details</div>' : ''}
+          </div>
+        `;
+        if (house.conquered) card.addEventListener('click', () => openModal(house));
+        grid.appendChild(card);
+      });
+    }
 
-      card.innerHTML = `
-        <div class="card-image-wrap">
-          <img src="${imgSrc}" alt="${house.name}" onerror="this.style.background='#1e1e2e'; this.style.minHeight='200px'; this.removeAttribute('src')" />
-          ${house.conquered
-            ? '<div class="badge-conquered">Veroverd</div>'
-            : `<div class="lock-overlay">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M18 8h-1V6A5 5 0 0 0 7 6v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zm-6 9a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm3.1-9H8.9V6a3.1 3.1 0 0 1 6.2 0v2z"/>
-                </svg>
-              </div>`
-          }
-        </div>
-        <div class="card-footer">
-          <div class="house-name">${house.name}</div>
-          <div class="house-status">${house.conquered ? 'Veroverd ✦' : 'Nog niet veroverd'}</div>
-          ${house.reward ? `<div class="house-reward">Beloning: ${house.reward}</div>` : ''}
-          ${house.conquered ? '<div class="click-hint">&#9432; Klik voor details</div>' : ''}
-        </div>
-      `;
+    // ── Render prizes ─────────────────────────────────────────────────────────
 
-      if (house.conquered) {
-        card.addEventListener('click', () => openModal(house));
-      }
+    function renderPrizes() {
+      const listJezelf = document.getElementById('prizeListJezelf');
+      const listAnder  = document.getElementById('prizeListAnder');
+      listJezelf.innerHTML = '';
+      listAnder.innerHTML  = '';
 
-      grid.appendChild(card);
-    });
-
-    // ── Modal ──
-    function openModal(house) {
-      document.getElementById('modalTitle').textContent = house.name;
-      document.getElementById('modalTag').textContent = house.conqueredBy ? `Veroverd door ${house.conqueredBy}` : 'Veroverd';
-      document.getElementById('modalDescription').textContent = house.description;
-
-      const img = document.getElementById('modalImage');
-      const imgSrc = house.modalImage || house.image;
-      if (imgSrc) {
-        img.src = imgSrc;
-        img.alt = house.name;
-        img.style.display = 'block';
-      } else {
-        img.style.display = 'none';
-      }
-
-      const taskList = document.getElementById('modalTasks');
-      taskList.innerHTML = '';
-      house.tasks.forEach(task => {
+      prizes.forEach((p, i) => {
         const li = document.createElement('li');
-        li.textContent = task;
-        taskList.appendChild(li);
+        li.textContent = p.label;
+        if (p.claimed) li.classList.add('claimed');
+        (p.category === 'Voor jezelf' ? listJezelf : listAnder).appendChild(li);
+      });
+    }
+
+    // ── Wheel ─────────────────────────────────────────────────────────────────
+
+    const COLORS = ['#982627','#c23234','#6b1a1b','#7a1e1e','#b02d2e','#501515'];
+    let currentRotation = 0;
+    let isSpinning = false;
+    let pendingPrize = null;
+
+    function getAvailablePrizes() {
+      return prizes.filter(p => !p.claimed);
+    }
+
+    function drawWheel() {
+      const canvas = document.getElementById('wheelCanvas');
+      const ctx = canvas.getContext('2d');
+      const available = getAvailablePrizes();
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+      const r  = cx - 10;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (available.length === 0) {
+        document.getElementById('wheelContainer').style.display = 'none';
+        document.getElementById('noPrizesMsg').style.display = 'block';
+        return;
+      }
+
+      const arc = (2 * Math.PI) / available.length;
+
+      available.forEach((prize, i) => {
+        const startAngle = i * arc - Math.PI / 2;
+        const endAngle   = startAngle + arc;
+
+        // Segment
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, r, startAngle, endAngle);
+        ctx.closePath();
+        ctx.fillStyle = COLORS[i % COLORS.length];
+        ctx.fill();
+        ctx.strokeStyle = '#0d0d12';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Label
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(startAngle + arc / 2);
+        ctx.textAlign = 'right';
+        ctx.fillStyle = '#fff';
+        ctx.font = `bold ${available.length > 4 ? 13 : 15}px Open Sans`;
+        ctx.shadowColor = 'rgba(0,0,0,0.6)';
+        ctx.shadowBlur = 4;
+
+        const text = prize.label.length > 18 ? prize.label.substring(0, 17) + '…' : prize.label;
+        ctx.fillText(text, r - 16, 5);
+
+        const catText = `(${prize.category})`;
+        ctx.font = `11px Open Sans`;
+        ctx.fillStyle = 'rgba(255,255,255,0.65)';
+        ctx.fillText(catText, r - 16, 19);
+
+        ctx.restore();
       });
 
+      // Center circle
+      ctx.beginPath();
+      ctx.arc(cx, cy, 22, 0, 2 * Math.PI);
+      ctx.fillStyle = '#0d0d12';
+      ctx.fill();
+      ctx.strokeStyle = '#982627';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+
+    function spinWheel() {
+      if (isSpinning) return;
+      const available = getAvailablePrizes();
+      if (available.length === 0) return;
+
+      isSpinning = true;
+      document.getElementById('spinBtn').disabled = true;
+      const canvas = document.getElementById('wheelCanvas');
+      canvas.classList.add('spinning');
+
+      const extraSpins   = 5 + Math.floor(Math.random() * 5); // 5–9 full rotations
+      const arc          = 360 / available.length;
+      const winnerIndex  = Math.floor(Math.random() * available.length);
+      // Position winner segment under pointer (top = -90°)
+      const targetAngle  = 360 - (winnerIndex * arc + arc / 2);
+      const totalRotation = currentRotation + extraSpins * 360 + targetAngle - (currentRotation % 360);
+
+      canvas.style.transition = 'transform 5s cubic-bezier(0.17, 0.67, 0.12, 0.99)';
+      canvas.style.transform  = `rotate(${totalRotation}deg)`;
+      currentRotation = totalRotation;
+
+      setTimeout(() => {
+        isSpinning = false;
+        canvas.classList.remove('spinning');
+        document.getElementById('spinBtn').disabled = false;
+        pendingPrize = available[winnerIndex];
+        showPrizeResult(pendingPrize);
+      }, 5200);
+    }
+
+    function showPrizeResult(prize) {
+      document.getElementById('prizeResultName').textContent = prize.label;
+      document.getElementById('prizeResultCat').textContent  = prize.category;
+
+      const list = document.getElementById('houseAssignList');
+      list.innerHTML = '';
+      houses.forEach(house => {
+        const btn = document.createElement('button');
+        btn.className = 'house-assign-btn';
+        btn.textContent = house.name;
+        btn.onclick = () => assignPrize(prize, house);
+        list.appendChild(btn);
+      });
+
+      document.getElementById('prizeOverlay').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function assignPrize(prize, house) {
+      // Mark prize as claimed
+      prize.claimed = true;
+      // Update house reward
+      house.reward = prize.category === 'Voor jezelf'
+        ? prize.label
+        : `${prize.label} (bij een ander)`;
+
+      closePrizeOverlay();
+      renderHouses();
+      renderPrizes();
+      drawWheel();
+    }
+
+    function closePrizeOverlay() {
+      document.getElementById('prizeOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // ── House modal ───────────────────────────────────────────────────────────
+
+    function openModal(house) {
+      document.getElementById('modalTitle').textContent = house.name;
+      document.getElementById('modalTag').textContent   = house.conqueredBy ? `Veroverd door ${house.conqueredBy}` : 'Veroverd';
+      document.getElementById('modalDescription').textContent = house.description;
+      const img = document.getElementById('modalImage');
+      const src = house.modalImage || house.image;
+      if (src) { img.src = src; img.alt = house.name; img.style.display = 'block'; }
+      else      { img.style.display = 'none'; }
       document.getElementById('modalOverlay').classList.add('active');
       document.body.style.overflow = 'hidden';
     }
@@ -574,15 +628,20 @@
       document.body.style.overflow = '';
     }
 
-    // Close on overlay click
     document.getElementById('modalOverlay').addEventListener('click', function(e) {
       if (e.target === this) closeModal();
     });
-
-    // Close on Escape
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') closeModal();
+    document.getElementById('prizeOverlay').addEventListener('click', function(e) {
+      if (e.target === this) closePrizeOverlay();
     });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { closeModal(); closePrizeOverlay(); }
+    });
+
+    // ── Init ──────────────────────────────────────────────────────────────────
+    renderHouses();
+    renderPrizes();
+    drawWheel();
   </script>
 </body>
 </html>
