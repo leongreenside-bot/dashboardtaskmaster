@@ -148,6 +148,71 @@
     }
     .house-card.conquered:hover .click-hint { opacity: 1; }
 
+    /* ── Three-dots menu ── */
+    .card-menu-wrap { position: relative; }
+    .card-menu-btn {
+      position: absolute; bottom: 10px; right: 10px;
+      background: rgba(152,38,39,0.15); border: 1px solid rgba(152,38,39,0.3);
+      color: var(--text-muted); border-radius: 6px;
+      width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1rem; line-height: 1;
+      transition: background 0.2s, color 0.2s; z-index: 10;
+    }
+    .card-menu-btn:hover { background: rgba(152,38,39,0.35); color: #fff; }
+    .card-dropdown {
+      display: none; position: absolute; bottom: 44px; right: 10px;
+      background: #22222e; border: 1px solid rgba(152,38,39,0.4);
+      border-radius: 8px; min-width: 180px; z-index: 20;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6); overflow: hidden;
+    }
+    .card-dropdown.open { display: block; }
+    .card-dropdown-item {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.7rem 1rem; font-size: 0.85rem; color: var(--text-main);
+      cursor: pointer; transition: background 0.15s;
+      border: none; background: none; width: 100%; text-align: left;
+      font-family: 'Open Sans', sans-serif;
+    }
+    .card-dropdown-item:hover { background: rgba(152,38,39,0.2); color: #fff; }
+
+    /* ── Edit modals (conqueror / prize) ── */
+    .edit-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(4px); z-index: 150;
+      align-items: center; justify-content: center; padding: 1.5rem;
+    }
+    .edit-overlay.active { display: flex; }
+    .edit-box {
+      background: #1a1a24; border: 1px solid rgba(152,38,39,0.4);
+      border-radius: 14px; max-width: 400px; width: 100%; padding: 2rem;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.8);
+      animation: modalIn 0.25s cubic-bezier(0.34,1.4,0.64,1);
+    }
+    .edit-box h3 {
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem;
+      letter-spacing: 0.15em; color: var(--red-light);
+      margin-bottom: 1.2rem; text-transform: uppercase;
+    }
+    .edit-option-list { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.2rem; }
+    .edit-option-btn {
+      padding: 0.65rem 1rem; background: rgba(152,38,39,0.1);
+      border: 1px solid rgba(152,38,39,0.25); border-radius: 8px;
+      color: var(--text-main); font-size: 0.9rem; cursor: pointer;
+      text-align: left; transition: background 0.15s, border-color 0.15s;
+      font-family: 'Open Sans', sans-serif;
+    }
+    .edit-option-btn:hover { background: rgba(152,38,39,0.3); border-color: var(--red); color: #fff; }
+    .edit-option-btn.claimed-opt { color: var(--text-muted); text-decoration: line-through; cursor: not-allowed; }
+    .edit-option-btn.claimed-opt:hover { background: rgba(152,38,39,0.05); border-color: rgba(152,38,39,0.15); color: var(--text-muted); }
+    .edit-cancel {
+      width: 100%; padding: 0.6rem; background: transparent;
+      border: 1px solid rgba(152,38,39,0.25); border-radius: 8px;
+      color: var(--text-muted); font-size: 0.8rem; cursor: pointer;
+      font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.15em;
+      text-transform: uppercase; transition: border-color 0.2s, color 0.2s;
+    }
+    .edit-cancel:hover { border-color: var(--red); color: var(--red); }
+
     /* ── Prizes section ── */
     .prizes-section { margin-top: 4rem; }
     .prizes-grid {
@@ -388,6 +453,24 @@
     </div>
   </div>
 
+  <!-- ── Conqueror edit overlay ── -->
+  <div class="edit-overlay" id="conquerorOverlay">
+    <div class="edit-box">
+      <h3>Veroveraar aanpassen</h3>
+      <div class="edit-option-list" id="conquerorList"></div>
+      <button class="edit-cancel" onclick="document.getElementById('conquerorOverlay').classList.remove('active');document.body.style.overflow=''">Annuleren</button>
+    </div>
+  </div>
+
+  <!-- ── Prize edit overlay ── -->
+  <div class="edit-overlay" id="prizeEditOverlay">
+    <div class="edit-box">
+      <h3>Prijs aanpassen</h3>
+      <div class="edit-option-list" id="prizeEditList"></div>
+      <button class="edit-cancel" onclick="document.getElementById('prizeEditOverlay').classList.remove('active');document.body.style.overflow=''">Annuleren</button>
+    </div>
+  </div>
+
   <!-- ── Prize result overlay ── -->
   <div class="prize-overlay" id="prizeOverlay">
     <div class="prize-result-box">
@@ -474,6 +557,13 @@
               : '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6a5 5 0 0 0-9.9-1H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zm-6 9a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg> Ontgrendelen'
             }
           </button>
+          <div class="card-menu-wrap">
+            <button class="card-menu-btn" data-id="${house.id}" title="Bewerken">⋯</button>
+            <div class="card-dropdown" id="menu-${house.id}">
+              <button class="card-dropdown-item" data-action="conqueror" data-id="${house.id}">✦ Veroveraar aanpassen</button>
+              <button class="card-dropdown-item" data-action="prize" data-id="${house.id}">🏆 Prijs aanpassen</button>
+            </div>
+          </div>
         `;
         if (house.conquered) card.addEventListener('click', () => openModal(house));
 
@@ -481,6 +571,24 @@
         toggleBtn.addEventListener('click', (e) => {
           e.stopPropagation();
           toggleHouse(house.id);
+        });
+
+        const menuBtn = card.querySelector('.card-menu-btn');
+        menuBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          closeAllMenus();
+          document.getElementById(`menu-${house.id}`).classList.toggle('open');
+        });
+
+        card.querySelectorAll('.card-dropdown-item').forEach(item => {
+          item.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeAllMenus();
+            const action = item.dataset.action;
+            const id = item.dataset.id;
+            if (action === 'conqueror') openConquerorEdit(id);
+            if (action === 'prize')     openPrizeEdit(id);
+          });
         });
 
         grid.appendChild(card);
@@ -492,6 +600,95 @@
       if (!house) return;
       house.conquered = !house.conquered;
       saveState();
+      renderHouses();
+      renderPrizes();
+      drawWheel();
+    }
+
+    function closeAllMenus() {
+      document.querySelectorAll('.card-dropdown.open').forEach(d => d.classList.remove('open'));
+    }
+
+    document.addEventListener('click', closeAllMenus);
+
+    // ── Conqueror edit ────────────────────────────────────────────────────────
+
+    const CONQUERORS = [
+      { name: 'Léon',   img: 'leon.png'   },
+      { name: 'Tim',    img: 'tim.png'    },
+      { name: 'Pascal', img: 'pascal.png' },
+      { name: 'Erik',   img: 'erik.png'   },
+      { name: 'Peter',  img: 'peter.png'  },
+      { name: 'Luuk',   img: 'luuk.png'   },
+    ];
+
+    let editingHouseId = null;
+
+    function openConquerorEdit(id) {
+      editingHouseId = id;
+      const list = document.getElementById('conquerorList');
+      list.innerHTML = '';
+      CONQUERORS.forEach(c => {
+        const btn = document.createElement('button');
+        btn.className = 'edit-option-btn';
+        btn.textContent = c.name;
+        btn.onclick = () => applyConqueror(id, c);
+        list.appendChild(btn);
+      });
+      document.getElementById('conquerorOverlay').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function applyConqueror(id, conqueror) {
+      const house = houses.find(h => h.id === id);
+      if (!house) return;
+      house.conquered   = true;
+      house.conqueredBy = conqueror.name;
+      house.modalImage  = conqueror.img;
+      house.description = `${house.name} is veroverd door ${conqueror.name}.`;
+      saveState();
+      document.getElementById('conquerorOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+      renderHouses();
+      renderPrizes();
+      drawWheel();
+    }
+
+    // ── Prize edit ────────────────────────────────────────────────────────────
+
+    function openPrizeEdit(id) {
+      editingHouseId = id;
+      const list = document.getElementById('prizeEditList');
+      list.innerHTML = '';
+      prizes.forEach(p => {
+        const btn = document.createElement('button');
+        btn.className = 'edit-option-btn' + (p.claimed ? ' claimed-opt' : '');
+        btn.textContent = `${p.label} (${p.category})`;
+        if (!p.claimed) btn.onclick = () => applyPrizeEdit(id, p);
+        list.appendChild(btn);
+      });
+      document.getElementById('prizeEditOverlay').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function applyPrizeEdit(id, prize) {
+      const house = houses.find(h => h.id === id);
+      if (!house) return;
+
+      // Unmark old prize if this house already had one
+      prizes.forEach(p => {
+        const oldLabel = prize.category === 'Voor jezelf' ? house.reward : house.reward?.replace(' (bij een ander)', '');
+        if (p.label === oldLabel && p.category === prize.category) p.claimed = false;
+      });
+
+      prize.claimed = true;
+      house.reward  = prize.category === 'Voor jezelf'
+        ? prize.label
+        : `${prize.label} (bij een ander)`;
+
+      saveState();
+      document.getElementById('prizeEditOverlay').classList.remove('active');
+      document.body.style.overflow = '';
       renderHouses();
       renderPrizes();
       drawWheel();
