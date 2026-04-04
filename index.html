@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>D4E Taskmaster</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Open+Sans:wght@400;600&display=swap');
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --gold: #c9a227;
+      --gold-light: #f0d060;
+      --gold-dark: #8a6e1a;
+      --bg-dark: #0d0d12;
+      --bg-card: #1a1a24;
+      --text-main: #f0e8d0;
+      --text-muted: #8a8090;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image:
+        radial-gradient(ellipse at 20% 0%, rgba(201,162,39,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 100%, rgba(201,162,39,0.06) 0%, transparent 60%);
+      color: var(--text-main);
+      font-family: 'Open Sans', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      padding: 3rem 1.5rem 2rem;
+    }
+
+    .logo-line {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.2rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .logo-line .divider {
+      height: 2px;
+      width: 60px;
+      background: linear-gradient(90deg, transparent, var(--gold));
+      flex-shrink: 0;
+    }
+
+    .logo-line .divider.right {
+      background: linear-gradient(90deg, var(--gold), transparent);
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      color: var(--gold-light);
+      text-shadow: 0 0 40px rgba(201,162,39,0.4), 0 2px 4px rgba(0,0,0,0.8);
+    }
+
+    .subtitle-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .subtitle-bar hr {
+      flex: 1;
+      max-width: 120px;
+      border: none;
+      border-top: 1px solid var(--gold-dark);
+    }
+
+    .subtitle-bar span {
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    .intro-text {
+      max-width: 680px;
+      margin: 0 auto;
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: #c8bfa8;
+      text-align: center;
+    }
+
+    /* ── Houses grid ── */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    .section-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.35em;
+      color: var(--gold-dark);
+      text-align: center;
+      text-transform: uppercase;
+      margin-bottom: 2.5rem;
+    }
+
+    .houses-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.8rem;
+    }
+
+    @media (max-width: 900px) {
+      .houses-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 560px) {
+      .houses-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── House card ── */
+    .house-card {
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--bg-card);
+      border: 1px solid rgba(201,162,39,0.15);
+      position: relative;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .house-card.conquered {
+      cursor: pointer;
+      border-color: rgba(201,162,39,0.4);
+    }
+
+    .house-card.conquered:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow:
+        0 16px 40px rgba(0,0,0,0.6),
+        0 0 20px rgba(201,162,39,0.25),
+        inset 0 0 0 1px rgba(201,162,39,0.6);
+    }
+
+    .house-card.locked {
+      cursor: not-allowed;
+      opacity: 0.75;
+    }
+
+    .card-image-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      background: #111;
+    }
+
+    .card-image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: filter 0.4s ease;
+    }
+
+    .house-card.locked .card-image-wrap img {
+      filter: grayscale(100%) brightness(0.7);
+    }
+
+    /* conquered badge */
+    .badge-conquered {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--gold);
+      color: #000;
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+
+    /* locked icon overlay */
+    .lock-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.25);
+    }
+
+    .lock-overlay svg {
+      width: 52px;
+      height: 52px;
+      fill: rgba(255,255,255,0.25);
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    }
+
+    /* Card footer */
+    .card-footer {
+      padding: 0.9rem 1rem;
+      text-align: center;
+      border-top: 1px solid rgba(201,162,39,0.1);
+    }
+
+    .card-footer .house-name {
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      color: var(--gold-light);
+      text-transform: uppercase;
+    }
+
+    .house-card.locked .card-footer .house-name {
+      color: var(--text-muted);
+    }
+
+    .card-footer .house-status {
+      font-size: 0.72rem;
+      margin-top: 3px;
+      color: var(--text-muted);
+    }
+
+    .house-card.conquered .card-footer .house-status {
+      color: var(--gold);
+    }
+
+    /* click hint */
+    .click-hint {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      margin-top: 6px;
+      font-size: 0.7rem;
+      color: rgba(201,162,39,0.6);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .house-card.conquered:hover .click-hint {
+      opacity: 1;
+    }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg-card);
+      border: 1px solid rgba(201,162,39,0.4);
+      border-radius: 16px;
+      max-width: 520px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.8), 0 0 40px rgba(201,162,39,0.1);
+      animation: modalIn 0.28s cubic-bezier(0.34,1.4,0.64,1);
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.92) translateY(16px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-image {
+      width: 100%;
+      max-height: 320px;
+      object-fit: cover;
+      border-radius: 14px 14px 0 0;
+    }
+
+    .modal-body {
+      padding: 1.8rem 2rem 2rem;
+    }
+
+    .modal-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      margin-bottom: 0.4rem;
+    }
+
+    .modal-tag {
+      display: inline-block;
+      background: rgba(201,162,39,0.15);
+      border: 1px solid var(--gold-dark);
+      color: var(--gold);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      padding: 3px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      font-family: 'Cinzel', serif;
+      margin-bottom: 1.2rem;
+    }
+
+    .modal-description {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: #c0b8a8;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-tasks {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .modal-tasks li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+      font-size: 0.9rem;
+      color: var(--text-main);
+    }
+
+    .modal-tasks li::before {
+      content: '▸';
+      color: var(--gold);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .modal-close {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.85rem;
+      background: transparent;
+      border: 1px solid rgba(201,162,39,0.35);
+      border-radius: 8px;
+      color: var(--gold);
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+      text-transform: uppercase;
+    }
+
+    .modal-close:hover {
+      background: rgba(201,162,39,0.12);
+      border-color: var(--gold);
+    }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--gold-dark); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+  <!-- ── Header ── -->
+  <header>
+    <div class="logo-line">
+      <div class="divider"></div>
+      <h1>D4E Taskmaster</h1>
+      <div class="divider right"></div>
+    </div>
+
+    <div class="subtitle-bar">
+      <hr /><span>Verovert de huizen</span><hr />
+    </div>
+
+    <p class="intro-text">
+      Welkom bij D4E Taskmaster. Hieronder zie je de zes huizen die veroverd moeten worden.
+      Klik op een veroverd huis voor meer informatie. Huizen die nog niet veroverd zijn,
+      zijn vergrendeld en wachten op hun moment van glorie.
+    </p>
+  </header>
+
+  <!-- ── Main ── -->
+  <main>
+    <p class="section-label">De huizen</p>
+
+    <div class="houses-grid" id="housesGrid">
+      <!-- Cards worden via JavaScript ingeladen -->
+    </div>
+  </main>
+
+  <!-- ── Modal ── -->
+  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true">
+    <div class="modal" id="modal">
+      <img class="modal-image" id="modalImage" src="" alt="" />
+      <div class="modal-body">
+        <div class="modal-title" id="modalTitle"></div>
+        <div class="modal-tag" id="modalTag">Veroverd</div>
+        <p class="modal-description" id="modalDescription"></p>
+        <ul class="modal-tasks" id="modalTasks"></ul>
+        <button class="modal-close" onclick="closeModal()">&#x2715; &nbsp; Sluiten</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * Huizen data
+     * ──────────
+     * conquered: true  = full colour, klikbaar
+     * conquered: false = grijstinten, vergrendeld
+     *
+     * Voeg je afbeeldingen toe in de map /images/ met de bestandsnaam zoals hieronder.
+     */
+    const houses = [
+      {
+        id: 'leon',
+        name: 'House of Léon',
+        image: 'images/house-leon.jpg',
+        conquered: true,
+        description: 'Het koninkrijk van Léon staat bekend om zijn serene rust en strategisch inzicht. De troon werd veroverd na een epische strijd om de beste koffie in de buurt.',
+        tasks: [
+          'Taken voltooid: alle weekdoelen gehaald',
+          'Bonus challenge geclaimd',
+          'Hoogste score van de week behaald',
+        ]
+      },
+      {
+        id: 'tim',
+        name: 'House of Tim',
+        image: 'images/house-tim.jpg',
+        conquered: true,
+        description: 'House of Tim ademt vastberadenheid. Tim bestormde dit huis met volle overtuiging en een gezichtsuitdrukking die geen tegenstand duldt.',
+        tasks: [
+          'Alle dagelijkse uitdagingen voltooid',
+          'Streaks bijgehouden: 14 dagen op rij',
+          'Teamchallenge gewonnen',
+        ]
+      },
+      {
+        id: 'erik',
+        name: 'House of Erik',
+        image: 'images/house-erik.jpg',
+        conquered: false,
+        description: 'House of Erik wacht nog op zijn rechtmatige eigenaar. De taken zijn groot, de uitdaging groter.',
+        tasks: []
+      },
+      {
+        id: 'luuk',
+        name: 'House of Luuk',
+        image: 'images/house-luuk.jpg',
+        conquered: false,
+        description: 'House of Luuk staat in de steigers. Luuk lacht al — maar het huis is nog niet veroverd.',
+        tasks: []
+      },
+      {
+        id: 'pascal',
+        name: 'House of Pascal',
+        image: 'images/house-pascal.jpg',
+        conquered: false,
+        description: 'House of Pascal wacht geduldig. De luipaard onesie is klaar voor de strijd.',
+        tasks: []
+      },
+      {
+        id: 'unknown',
+        name: 'House of ???',
+        image: '',
+        conquered: false,
+        description: 'Het zesde huis is nog een mysterie. Wie zal het claimen?',
+        tasks: []
+      }
+    ];
+
+    // ── Render houses ──
+    const grid = document.getElementById('housesGrid');
+
+    houses.forEach(house => {
+      const card = document.createElement('div');
+      card.className = `house-card ${house.conquered ? 'conquered' : 'locked'}`;
+
+      const imgSrc = house.image || 'images/placeholder.jpg';
+
+      card.innerHTML = `
+        <div class="card-image-wrap">
+          <img src="${imgSrc}" alt="${house.name}" onerror="this.style.background='#1e1e2e'; this.style.minHeight='200px'; this.removeAttribute('src')" />
+          ${house.conquered
+            ? '<div class="badge-conquered">Veroverd</div>'
+            : `<div class="lock-overlay">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M18 8h-1V6A5 5 0 0 0 7 6v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zm-6 9a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm3.1-9H8.9V6a3.1 3.1 0 0 1 6.2 0v2z"/>
+                </svg>
+              </div>`
+          }
+        </div>
+        <div class="card-footer">
+          <div class="house-name">${house.name}</div>
+          <div class="house-status">${house.conquered ? 'Veroverd ✦' : 'Nog niet veroverd'}</div>
+          ${house.conquered ? '<div class="click-hint">&#9432; Klik voor details</div>' : ''}
+        </div>
+      `;
+
+      if (house.conquered) {
+        card.addEventListener('click', () => openModal(house));
+      }
+
+      grid.appendChild(card);
+    });
+
+    // ── Modal ──
+    function openModal(house) {
+      document.getElementById('modalTitle').textContent = house.name;
+      document.getElementById('modalDescription').textContent = house.description;
+
+      const img = document.getElementById('modalImage');
+      if (house.image) {
+        img.src = house.image;
+        img.alt = house.name;
+        img.style.display = 'block';
+      } else {
+        img.style.display = 'none';
+      }
+
+      const taskList = document.getElementById('modalTasks');
+      taskList.innerHTML = '';
+      house.tasks.forEach(task => {
+        const li = document.createElement('li');
+        li.textContent = task;
+        taskList.appendChild(li);
+      });
+
+      document.getElementById('modalOverlay').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Close on overlay click
+    document.getElementById('modalOverlay').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+</body>
+</html>
