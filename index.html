@@ -974,7 +974,14 @@
 
     function saveState() {
       const state = {
-        houses: houses.map(h => ({ id: h.id, conquered: h.conquered, reward: h.reward || null })),
+        houses: houses.map(h => ({
+          id: h.id,
+          conquered: h.conquered,
+          reward: h.reward || null,
+          conqueredBy: h.conqueredBy || null,
+          modalImage: h.modalImage || null,
+          description: h.description || null
+        })),
         prizes: prizes.map(p => ({ id: p.id, claimed: p.claimed }))
       };
       stateRef.set(state);
@@ -984,8 +991,11 @@
       state.houses.forEach(saved => {
         const house = houses.find(h => h.id === saved.id);
         if (house) {
-          house.conquered = saved.conquered;
-          if (saved.reward !== null) house.reward = saved.reward;
+          house.conquered   = saved.conquered;
+          if (saved.reward      !== null) house.reward      = saved.reward;
+          if (saved.conqueredBy !== null) house.conqueredBy = saved.conqueredBy;
+          if (saved.modalImage  !== null) house.modalImage  = saved.modalImage;
+          if (saved.description !== null) house.description = saved.description;
         }
       });
       state.prizes.forEach(saved => {
