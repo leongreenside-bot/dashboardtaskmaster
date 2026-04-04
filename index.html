@@ -993,21 +993,24 @@
     }
 
     function applyState(state) {
-      state.houses.forEach(saved => {
-        const house = houses.find(h => h.id === saved.id);
-        if (house) {
-          house.conquered   = saved.conquered;
-          if (saved.reward      !== null) house.reward      = saved.reward;
-          if (saved.conqueredBy !== null) house.conqueredBy = saved.conqueredBy;
-          if (saved.modalImage  !== null) house.modalImage  = saved.modalImage;
-          if (saved.description !== null) house.description = saved.description;
-        }
-      });
-      state.prizes.forEach(saved => {
-        const prize = prizes.find(p => p.id === saved.id);
-        if (prize) prize.claimed = saved.claimed;
-      });
-      // Reconcile: sync claimed state based on actual house rewards
+      if (state.houses) {
+        state.houses.forEach(saved => {
+          const house = houses.find(h => h.id === saved.id);
+          if (house) {
+            house.conquered   = saved.conquered;
+            if (saved.reward      != null) house.reward      = saved.reward;
+            if (saved.conqueredBy != null) house.conqueredBy = saved.conqueredBy;
+            if (saved.modalImage  != null) house.modalImage  = saved.modalImage;
+            if (saved.description != null) house.description = saved.description;
+          }
+        });
+      }
+      if (state.prizes) {
+        state.prizes.forEach(saved => {
+          const prize = prizes.find(p => p.id === saved.id);
+          if (prize) prize.claimed = saved.claimed;
+        });
+      }
       reconcilePrizes();
     }
 
