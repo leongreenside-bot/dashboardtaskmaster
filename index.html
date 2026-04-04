@@ -489,6 +489,7 @@
       const house = houses.find(h => h.id === id);
       if (!house) return;
       house.conquered = !house.conquered;
+      saveState();
       renderHouses();
       renderPrizes();
       drawWheel();
@@ -690,13 +691,12 @@
     }
 
     function assignPrize(prize, house) {
-      // Mark prize as claimed
       prize.claimed = true;
-      // Update house reward
       house.reward = prize.category === 'Voor jezelf'
         ? prize.label
         : `${prize.label} (bij een ander)`;
 
+      saveState();
       closePrizeOverlay();
       renderHouses();
       renderPrizes();
@@ -737,7 +737,39 @@
       if (e.key === 'Escape') { closeModal(); closePrizeOverlay(); }
     });
 
+    // ── Persistence ──────────────────────────────────────────────────────────
+
+    const STORAGE_KEY = 'd4e_taskmaster_state';
+
+    function saveState() {
+      const state = {
+        houses: houses.map(h => ({ id: h.id, conquered: h.conquered, reward: h.reward || null })),
+        prizes: prizes.map(p => ({ id: p.id, claimed: p.claimed }))
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function loadState() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      try {
+        const state = JSON.parse(raw);
+        state.houses.forEach(saved => {
+          const house = houses.find(h => h.id === saved.id);
+          if (house) {
+            house.conquered = saved.conquered;
+            if (saved.reward !== null) house.reward = saved.reward;
+          }
+        });
+        state.prizes.forEach(saved => {
+          const prize = prizes.find(p => p.id === saved.id);
+          if (prize) prize.claimed = saved.claimed;
+        });
+      } catch(e) { /* corrupt state, ignore */ }
+    }
+
     // ── Init ──────────────────────────────────────────────────────────────────
+    loadState();
     renderHouses();
     renderPrizes();
     drawWheel();
