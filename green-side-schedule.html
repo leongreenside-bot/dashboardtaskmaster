@@ -24,6 +24,7 @@
       --text-muted: #6b7568;
       --bg: #f7f8f5;
       --card: #ffffff;
+      --red: #b3453f;
     }
 
     body {
@@ -58,6 +59,30 @@
       max-width: 1100px;
       margin: 0 auto;
       padding: 2rem 1.25rem 4rem;
+    }
+
+    /* ── Setup banner ── */
+    .setup-banner {
+      background: #fff8e8;
+      border: 1px solid var(--sand);
+      color: #6b5a2a;
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      display: none;
+    }
+
+    .setup-banner.visible { display: block; }
+
+    .setup-banner strong { color: #4a3d16; }
+
+    .setup-banner code {
+      background: rgba(0,0,0,0.06);
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.82rem;
     }
 
     /* ── Controls ── */
@@ -116,22 +141,32 @@
 
     .today-btn:hover { background: var(--pistachio); }
 
-    .share-btn {
-      background: var(--night-blue);
-      color: #fff;
-      border: none;
-      padding: 0.6rem 1.1rem;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
+    .status-badge {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      transition: opacity 0.15s;
+      gap: 0.45rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      padding: 0.45rem 0.8rem;
+      border-radius: 20px;
+      background: var(--card);
+      border: 1px solid var(--smoke);
     }
 
-    .share-btn:hover { opacity: 0.88; }
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .status-badge.live .status-dot { background: var(--green); box-shadow: 0 0 0 3px rgba(57,118,85,0.15); }
+    .status-badge.live { color: var(--green-dark); border-color: var(--pistachio); }
+
+    .status-badge.offline .status-dot { background: var(--red); }
+    .status-badge.offline { color: var(--red); border-color: #f0d9d7; }
 
     /* ── Legend ── */
     .legend {
@@ -295,6 +330,8 @@
       z-index: 50;
     }
 
+    .toast.error { background: var(--red); }
+
     .toast.show {
       opacity: 1;
       transform: translateX(-50%) translateY(0);
@@ -314,6 +351,12 @@
   </header>
 
   <main>
+    <div class="setup-banner" id="setupBanner">
+      <strong>Live database nog niet gekoppeld.</strong> Deze pagina slaat wijzigingen nu alleen lokaal in jouw browser op.
+      Vul het <code>firebaseConfig</code> object bovenin het <code>&lt;script type="module"&gt;</code>-blok van dit bestand in
+      met de gegevens van je eigen Firebase-project om live gedeelde data voor het hele team te activeren.
+    </div>
+
     <div class="controls">
       <div class="month-nav">
         <button id="prevMonth" aria-label="Vorige maand">&#8592;</button>
@@ -321,7 +364,7 @@
         <button id="nextMonth" aria-label="Volgende maand">&#8594;</button>
         <button class="today-btn" id="todayBtn">Vandaag</button>
       </div>
-      <button class="share-btn" id="shareBtn">&#128279; Deel planning</button>
+      <span class="status-badge" id="statusBadge"><span class="status-dot"></span><span id="statusText">Lokaal (niet gedeeld)</span></span>
     </div>
 
     <div class="legend" id="legend"></div>
@@ -337,12 +380,50 @@
   </main>
 
   <footer>
-    Wijzigingen worden lokaal bewaard in je browser. Gebruik &ldquo;Deel planning&rdquo; om je planning als link met het team te delen.
+    Wijzigingen worden automatisch live gedeeld met iedereen die deze pagina open heeft, zodra de live database is gekoppeld.
   </footer>
 
   <div class="toast" id="toast"></div>
 
-  <script>
+  <script type="module">
+    // ─────────────────────────────────────────────────────────────────
+    // FIREBASE CONFIGURATIE
+    // Vul hieronder de gegevens van jouw eigen Firebase-project in om
+    // deze planning live te delen met het hele team:
+    //
+    //  1. Ga naar https://console.firebase.google.com/ en maak een
+    //     (gratis) project aan, bv. "green-side-schedule".
+    //  2. Ga naar Build ▸ Firestore Database ▸ "Database maken".
+    //     Kies een locatie en start in "test mode" (of stel de regels
+    //     hieronder in via Firestore ▸ Rules):
+    //
+    //       rules_version = '2';
+    //       service cloud.firestore {
+    //         match /databases/{database}/documents {
+    //           match /greenSideSchedule/{doc} {
+    //             allow read, write: if true;
+    //           }
+    //         }
+    //       }
+    //
+    //     (Let op: dit maakt de planning voor iedereen met de link
+    //     bewerkbaar zonder inloggen — prima voor een intern teamtooltje
+    //     zonder gevoelige data, maar geen echte toegangscontrole.)
+    //  3. Ga naar Projectinstellingen ▸ Jouw apps ▸ Web-app toevoegen
+    //     (</> icoon), geef een naam, en kopieer het "firebaseConfig"
+    //     object dat je te zien krijgt naar hieronder.
+    // ─────────────────────────────────────────────────────────────────
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID",
+    };
+
+    const isConfigured = firebaseConfig.apiKey !== "YOUR_API_KEY";
+
     const MEMBERS = [
       'Nick den Bol',
       'Jorren van der Schaaff',
@@ -371,23 +452,16 @@
     const MONTH_NAMES = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
     const WEEKDAY_LABEL = { 3: 'wo', 5: 'vr' };
 
-    let state = loadState();
+    let state = loadLocalState();
+    let firstSnapshot = true;
+    let scheduleDocRef = null;
+    let firestoreSetDoc = null;
+
     const today = new Date();
     let viewYear = today.getFullYear();
     let viewMonth = today.getMonth();
 
-    function loadState() {
-      const params = new URLSearchParams(window.location.search);
-      const shared = params.get('data');
-      if (shared) {
-        try {
-          const decoded = JSON.parse(decodeURIComponent(escape(atob(shared))));
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(decoded));
-          return decoded;
-        } catch (e) {
-          // ignore invalid share payloads, fall through to local storage
-        }
-      }
+    function loadLocalState() {
       try {
         return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
       } catch (e) {
@@ -395,7 +469,7 @@
       }
     }
 
-    function saveState() {
+    function cacheLocally() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
 
@@ -438,6 +512,23 @@
       document.getElementById('monthLabel').textContent = `${MONTH_NAMES[viewMonth]} ${viewYear}`;
     }
 
+    function applySelectColor(select, loc) {
+      const c = LOCATION_COLORS[loc] || LOCATION_COLORS[''];
+      select.style.background = c.bg;
+      select.style.color = c.fg;
+      select.style.borderColor = loc ? 'transparent' : '#e5e5e5';
+    }
+
+    function persistCell(key, entry) {
+      cacheLocally();
+      if (isConfigured && scheduleDocRef) {
+        firestoreSetDoc(scheduleDocRef, { [key]: entry }, { merge: true }).catch(err => {
+          showToast('Opslaan mislukt — controleer je internetverbinding', true);
+          console.error(err);
+        });
+      }
+    }
+
     function renderTable() {
       const days = getScheduleDays(viewYear, viewMonth);
       const headerRow = document.getElementById('headerRow');
@@ -458,8 +549,7 @@
       body.innerHTML = '';
       MEMBERS.forEach(member => {
         const tr = document.createElement('tr');
-        let rowHtml = `<th class="member-cell">${member}</th>`;
-        tr.innerHTML = rowHtml;
+        tr.innerHTML = `<th class="member-cell">${member}</th>`;
 
         days.forEach(d => {
           const dateStr = dateToStr(d);
@@ -497,21 +587,24 @@
           customInput.className = 'loc-custom' + (entry.loc === 'Anders...' ? ' visible' : '');
           customInput.placeholder = 'Vul locatie in...';
           customInput.value = entry.custom || '';
+          customInput.dataset.key = key;
 
           select.addEventListener('change', () => {
             const loc = select.value;
             const existing = state[key] || {};
-            state[key] = { loc, custom: loc === 'Anders...' ? (existing.custom || '') : '' };
+            const newEntry = { loc, custom: loc === 'Anders...' ? (existing.custom || '') : '' };
+            state[key] = newEntry;
             applySelectColor(select, loc);
             customInput.classList.toggle('visible', loc === 'Anders...');
             if (loc === 'Anders...') customInput.focus();
-            saveState();
+            persistCell(key, newEntry);
           });
 
-          customInput.addEventListener('input', () => {
-            const existing = state[key] || { loc: 'Anders...' };
-            state[key] = { loc: existing.loc, custom: customInput.value };
-            saveState();
+          customInput.addEventListener('blur', () => {
+            const existing = state[key] || { loc: 'Anders...', custom: '' };
+            const newEntry = { loc: existing.loc, custom: customInput.value };
+            state[key] = newEntry;
+            persistCell(key, newEntry);
           });
 
           wrap.appendChild(select);
@@ -524,16 +617,52 @@
       });
     }
 
-    function applySelectColor(select, loc) {
-      const c = LOCATION_COLORS[loc] || LOCATION_COLORS[''];
-      select.style.background = c.bg;
-      select.style.color = c.fg;
-      select.style.borderColor = loc ? 'transparent' : '#e5e5e5';
+    // Lightweight sync that updates values in place without rebuilding
+    // the DOM, so an incoming live update doesn't interrupt someone who
+    // is actively typing in a different cell.
+    function syncVisibleCellsFromState() {
+      document.querySelectorAll('select.loc-select').forEach(select => {
+        const key = select.dataset.key;
+        const entry = state[key] || { loc: '', custom: '' };
+        if (document.activeElement === select) return;
+        if (select.value !== (entry.loc || '')) select.value = entry.loc || '';
+        applySelectColor(select, entry.loc || '');
+      });
+      document.querySelectorAll('input.loc-custom').forEach(input => {
+        const key = input.dataset.key;
+        const entry = state[key] || { loc: '', custom: '' };
+        input.classList.toggle('visible', entry.loc === 'Anders...');
+        if (document.activeElement === input) return;
+        if (input.value !== (entry.custom || '')) input.value = entry.custom || '';
+      });
     }
 
     function render() {
       renderMonthLabel();
       renderTable();
+    }
+
+    function setStatus(mode) {
+      const badge = document.getElementById('statusBadge');
+      const text = document.getElementById('statusText');
+      badge.classList.remove('live', 'offline');
+      if (mode === 'live') {
+        badge.classList.add('live');
+        text.textContent = 'Live gedeeld';
+      } else if (mode === 'offline') {
+        badge.classList.add('offline');
+        text.textContent = 'Verbinding verbroken';
+      } else {
+        text.textContent = 'Lokaal (niet gedeeld)';
+      }
+    }
+
+    function showToast(msg, isError) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.toggle('error', !!isError);
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2600);
     }
 
     document.getElementById('prevMonth').addEventListener('click', () => {
@@ -554,33 +683,41 @@
       render();
     });
 
-    document.getElementById('shareBtn').addEventListener('click', () => {
-      const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
-      const url = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
-      const toast = document.getElementById('toast');
-
-      const showToast = (msg) => {
-        toast.textContent = msg;
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2200);
-      };
-
-      if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(url)
-          .then(() => showToast('Link gekopieerd naar klembord!'))
-          .catch(() => showToast(url));
-      } else {
-        showToast(url);
-      }
-    });
-
-    // Clean the shared-data param from the address bar after loading it
-    if (new URLSearchParams(window.location.search).get('data')) {
-      history.replaceState({}, '', window.location.pathname);
-    }
-
     renderLegend();
     render();
+
+    if (!isConfigured) {
+      document.getElementById('setupBanner').classList.add('visible');
+      setStatus('local');
+    } else {
+      document.getElementById('setupBanner').classList.remove('visible');
+      import('https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js').then(async ({ initializeApp }) => {
+        const { getFirestore, doc, onSnapshot, setDoc } = await import('https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js');
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        scheduleDocRef = doc(db, 'greenSideSchedule', 'schedule');
+        firestoreSetDoc = setDoc;
+
+        onSnapshot(scheduleDocRef, snap => {
+          state = snap.exists() ? snap.data() : {};
+          cacheLocally();
+          if (firstSnapshot) {
+            firstSnapshot = false;
+            render();
+          } else {
+            syncVisibleCellsFromState();
+          }
+          setStatus('live');
+        }, err => {
+          console.error(err);
+          setStatus('offline');
+        });
+      }).catch(err => {
+        console.error('Kon Firebase niet laden:', err);
+        setStatus('offline');
+      });
+    }
   </script>
 </body>
 </html>
