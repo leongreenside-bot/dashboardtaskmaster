@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Waar werkt Green Side?</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap');
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --green: #397655;
+      --green-dark: #2b5a41;
+      --pistachio: #cde3bb;
+      --smoke: #e5e5e5;
+      --night-blue: #375478;
+      --sand: #e8d9b5;
+      --text-main: #23291f;
+      --text-muted: #6b7568;
+      --bg: #f7f8f5;
+      --card: #ffffff;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--green);
+      color: #ffffff;
+      padding: 2.5rem 1.5rem 2rem;
+      text-align: center;
+    }
+
+    header h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(1.7rem, 4.5vw, 2.6rem);
+      letter-spacing: -0.01em;
+    }
+
+    header p {
+      max-width: 640px;
+      margin: 0.8rem auto 0;
+      color: var(--pistachio);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+
+    /* ── Controls ── */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .month-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .month-nav button {
+      background: var(--card);
+      border: 1px solid var(--smoke);
+      color: var(--green-dark);
+      width: 2.4rem;
+      height: 2.4rem;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .month-nav button:hover {
+      background: var(--pistachio);
+      border-color: var(--green);
+    }
+
+    .month-nav .month-label {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--green-dark);
+      min-width: 170px;
+      text-align: center;
+      text-transform: capitalize;
+    }
+
+    .today-btn {
+      background: transparent;
+      border: 1px solid var(--green);
+      color: var(--green-dark);
+      padding: 0.5rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .today-btn:hover { background: var(--pistachio); }
+
+    .share-btn {
+      background: var(--night-blue);
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: opacity 0.15s;
+    }
+
+    .share-btn:hover { opacity: 0.88; }
+
+    /* ── Legend ── */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1.2rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .legend .swatch {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .legend .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      display: inline-block;
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+
+    /* ── Table ── */
+    .table-wrap {
+      background: var(--card);
+      border-radius: 14px;
+      border: 1px solid var(--smoke);
+      overflow-x: auto;
+      box-shadow: 0 2px 10px rgba(35,41,31,0.05);
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 720px;
+    }
+
+    thead th {
+      background: var(--green);
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 0.78rem;
+      padding: 0.8rem 0.6rem;
+      text-align: center;
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+    }
+
+    thead th.member-col-head {
+      text-align: left;
+      position: sticky;
+      left: 0;
+      z-index: 3;
+      background: var(--green-dark);
+    }
+
+    thead th .weekday {
+      display: block;
+      font-size: 0.68rem;
+      opacity: 0.85;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    thead th.today-col {
+      background: var(--night-blue);
+    }
+
+    tbody td, tbody th {
+      border-bottom: 1px solid var(--smoke);
+      padding: 0.5rem;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    tbody th.member-cell {
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      position: sticky;
+      left: 0;
+      background: var(--card);
+      z-index: 2;
+      border-right: 1px solid var(--smoke);
+    }
+
+    tbody tr:nth-child(even) th.member-cell {
+      background: #fbfcfa;
+    }
+
+    td.today-col {
+      background: rgba(55,84,120,0.05);
+    }
+
+    .cell-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      align-items: stretch;
+    }
+
+    select.loc-select {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      padding: 0.4rem 0.5rem;
+      border-radius: 7px;
+      border: 1px solid var(--smoke);
+      background: #fff;
+      color: var(--text-main);
+      cursor: pointer;
+      min-width: 150px;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%2323291f'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 0.5rem center;
+      padding-right: 1.4rem;
+    }
+
+    input.loc-custom {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.76rem;
+      padding: 0.35rem 0.5rem;
+      border-radius: 7px;
+      border: 1px solid var(--sand);
+      background: #fffdf7;
+      display: none;
+    }
+
+    input.loc-custom.visible { display: block; }
+
+    footer {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.25rem 3rem;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      text-align: center;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--green-dark);
+      color: #fff;
+      padding: 0.7rem 1.2rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      opacity: 0;
+      transition: opacity 0.25s, transform 0.25s;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 640px) {
+      .controls { flex-direction: column; align-items: stretch; }
+      .month-nav { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Waar werkt Green Side?</h1>
+    <p>Overzicht van alle woensdagen en vrijdagen: wie is aanwezig en op welke locatie.</p>
+  </header>
+
+  <main>
+    <div class="controls">
+      <div class="month-nav">
+        <button id="prevMonth" aria-label="Vorige maand">&#8592;</button>
+        <span class="month-label" id="monthLabel"></span>
+        <button id="nextMonth" aria-label="Volgende maand">&#8594;</button>
+        <button class="today-btn" id="todayBtn">Vandaag</button>
+      </div>
+      <button class="share-btn" id="shareBtn">&#128279; Deel planning</button>
+    </div>
+
+    <div class="legend" id="legend"></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr id="headerRow"></tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer>
+    Wijzigingen worden lokaal bewaard in je browser. Gebruik &ldquo;Deel planning&rdquo; om je planning als link met het team te delen.
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const MEMBERS = [
+      'Nick den Bol',
+      'Jorren van der Schaaff',
+      'Anne-Pim van Oostveen',
+      'Léon Polman',
+    ];
+
+    const LOCATIONS = [
+      'Stadskantoor Utrecht',
+      'Bij Léon in Tricht',
+      'Bij AP in Utrecht',
+      'Bij Jorren in Zoetermeer',
+      'Anders...',
+    ];
+
+    const LOCATION_COLORS = {
+      '': { bg: '#ffffff', fg: '#6b7568' },
+      'Stadskantoor Utrecht': { bg: '#375478', fg: '#ffffff' },
+      'Bij Léon in Tricht': { bg: '#397655', fg: '#ffffff' },
+      'Bij AP in Utrecht': { bg: '#cde3bb', fg: '#23291f' },
+      'Bij Jorren in Zoetermeer': { bg: '#e5e5e5', fg: '#23291f' },
+      'Anders...': { bg: '#e8d9b5', fg: '#23291f' },
+    };
+
+    const STORAGE_KEY = 'greenSideSchedule';
+    const MONTH_NAMES = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+    const WEEKDAY_LABEL = { 3: 'wo', 5: 'vr' };
+
+    let state = loadState();
+    const today = new Date();
+    let viewYear = today.getFullYear();
+    let viewMonth = today.getMonth();
+
+    function loadState() {
+      const params = new URLSearchParams(window.location.search);
+      const shared = params.get('data');
+      if (shared) {
+        try {
+          const decoded = JSON.parse(decodeURIComponent(escape(atob(shared))));
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(decoded));
+          return decoded;
+        } catch (e) {
+          // ignore invalid share payloads, fall through to local storage
+        }
+      }
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function cellKey(memberName, dateStr) {
+      return `${dateStr}__${memberName}`;
+    }
+
+    function isSameDate(a, b) {
+      return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+    }
+
+    function getScheduleDays(year, month) {
+      const days = [];
+      const date = new Date(year, month, 1);
+      while (date.getMonth() === month) {
+        if (date.getDay() === 3 || date.getDay() === 5) {
+          days.push(new Date(date));
+        }
+        date.setDate(date.getDate() + 1);
+      }
+      return days;
+    }
+
+    function dateToStr(d) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+
+    function renderLegend() {
+      const legend = document.getElementById('legend');
+      legend.innerHTML = LOCATIONS.map(loc => {
+        const c = LOCATION_COLORS[loc];
+        return `<span class="swatch"><span class="dot" style="background:${c.bg}"></span>${loc === 'Anders...' ? 'Anders (aangepast)' : loc}</span>`;
+      }).join('');
+    }
+
+    function renderMonthLabel() {
+      document.getElementById('monthLabel').textContent = `${MONTH_NAMES[viewMonth]} ${viewYear}`;
+    }
+
+    function renderTable() {
+      const days = getScheduleDays(viewYear, viewMonth);
+      const headerRow = document.getElementById('headerRow');
+      const body = document.getElementById('tableBody');
+
+      let headerHtml = '<th class="member-col-head">Teamlid</th>';
+      days.forEach(d => {
+        const isToday = isSameDate(d, today);
+        headerHtml += `<th class="${isToday ? 'today-col' : ''}"><span class="weekday">${WEEKDAY_LABEL[d.getDay()]}</span>${d.getDate()}</th>`;
+      });
+      headerRow.innerHTML = headerHtml;
+
+      if (days.length === 0) {
+        body.innerHTML = `<tr><td colspan="1" style="padding:1.5rem;color:#6b7568;">Geen woensdagen of vrijdagen in deze maand.</td></tr>`;
+        return;
+      }
+
+      body.innerHTML = '';
+      MEMBERS.forEach(member => {
+        const tr = document.createElement('tr');
+        let rowHtml = `<th class="member-cell">${member}</th>`;
+        tr.innerHTML = rowHtml;
+
+        days.forEach(d => {
+          const dateStr = dateToStr(d);
+          const key = cellKey(member, dateStr);
+          const entry = state[key] || { loc: '', custom: '' };
+          const isToday = isSameDate(d, today);
+
+          const td = document.createElement('td');
+          td.className = isToday ? 'today-col' : '';
+
+          const wrap = document.createElement('div');
+          wrap.className = 'cell-wrap';
+
+          const select = document.createElement('select');
+          select.className = 'loc-select';
+          select.dataset.key = key;
+
+          const emptyOpt = document.createElement('option');
+          emptyOpt.value = '';
+          emptyOpt.textContent = '– kies locatie –';
+          select.appendChild(emptyOpt);
+
+          LOCATIONS.forEach(loc => {
+            const opt = document.createElement('option');
+            opt.value = loc;
+            opt.textContent = loc;
+            select.appendChild(opt);
+          });
+
+          select.value = entry.loc || '';
+          applySelectColor(select, entry.loc || '');
+
+          const customInput = document.createElement('input');
+          customInput.type = 'text';
+          customInput.className = 'loc-custom' + (entry.loc === 'Anders...' ? ' visible' : '');
+          customInput.placeholder = 'Vul locatie in...';
+          customInput.value = entry.custom || '';
+
+          select.addEventListener('change', () => {
+            const loc = select.value;
+            const existing = state[key] || {};
+            state[key] = { loc, custom: loc === 'Anders...' ? (existing.custom || '') : '' };
+            applySelectColor(select, loc);
+            customInput.classList.toggle('visible', loc === 'Anders...');
+            if (loc === 'Anders...') customInput.focus();
+            saveState();
+          });
+
+          customInput.addEventListener('input', () => {
+            const existing = state[key] || { loc: 'Anders...' };
+            state[key] = { loc: existing.loc, custom: customInput.value };
+            saveState();
+          });
+
+          wrap.appendChild(select);
+          wrap.appendChild(customInput);
+          td.appendChild(wrap);
+          tr.appendChild(td);
+        });
+
+        body.appendChild(tr);
+      });
+    }
+
+    function applySelectColor(select, loc) {
+      const c = LOCATION_COLORS[loc] || LOCATION_COLORS[''];
+      select.style.background = c.bg;
+      select.style.color = c.fg;
+      select.style.borderColor = loc ? 'transparent' : '#e5e5e5';
+    }
+
+    function render() {
+      renderMonthLabel();
+      renderTable();
+    }
+
+    document.getElementById('prevMonth').addEventListener('click', () => {
+      viewMonth -= 1;
+      if (viewMonth < 0) { viewMonth = 11; viewYear -= 1; }
+      render();
+    });
+
+    document.getElementById('nextMonth').addEventListener('click', () => {
+      viewMonth += 1;
+      if (viewMonth > 11) { viewMonth = 0; viewYear += 1; }
+      render();
+    });
+
+    document.getElementById('todayBtn').addEventListener('click', () => {
+      viewYear = today.getFullYear();
+      viewMonth = today.getMonth();
+      render();
+    });
+
+    document.getElementById('shareBtn').addEventListener('click', () => {
+      const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
+      const url = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
+      const toast = document.getElementById('toast');
+
+      const showToast = (msg) => {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2200);
+      };
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url)
+          .then(() => showToast('Link gekopieerd naar klembord!'))
+          .catch(() => showToast(url));
+      } else {
+        showToast(url);
+      }
+    });
+
+    // Clean the shared-data param from the address bar after loading it
+    if (new URLSearchParams(window.location.search).get('data')) {
+      history.replaceState({}, '', window.location.pathname);
+    }
+
+    renderLegend();
+    render();
+  </script>
+</body>
+</html>
