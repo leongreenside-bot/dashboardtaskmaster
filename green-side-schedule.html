@@ -56,7 +56,7 @@
     }
 
     main {
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 2rem 1.25rem 4rem;
     }
@@ -75,9 +75,7 @@
     }
 
     .setup-banner.visible { display: block; }
-
     .setup-banner strong { color: #4a3d16; }
-
     .setup-banner code {
       background: rgba(0,0,0,0.06);
       padding: 0.1rem 0.35rem;
@@ -92,7 +90,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
     }
 
     .month-nav {
@@ -164,7 +162,6 @@
 
     .status-badge.live .status-dot { background: var(--green); box-shadow: 0 0 0 3px rgba(57,118,85,0.15); }
     .status-badge.live { color: var(--green-dark); border-color: var(--pistachio); }
-
     .status-badge.offline .status-dot { background: var(--red); }
     .status-badge.offline { color: var(--red); border-color: #f0d9d7; }
 
@@ -173,7 +170,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 0.6rem 1.2rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.75rem;
       font-size: 0.82rem;
       color: var(--text-muted);
     }
@@ -192,121 +189,217 @@
       border: 1px solid rgba(0,0,0,0.08);
     }
 
-    /* ── Table ── */
-    .table-wrap {
+    /* ── Days grid ── */
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 1.4rem;
+    }
+
+    .day-card {
       background: var(--card);
-      border-radius: 14px;
       border: 1px solid var(--smoke);
-      overflow-x: auto;
+      border-radius: 14px;
       box-shadow: 0 2px 10px rgba(35,41,31,0.05);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      min-width: 720px;
+    .day-card.today {
+      border-color: var(--night-blue);
+      box-shadow: 0 0 0 2px rgba(55,84,120,0.18);
     }
 
-    thead th {
+    .day-card-header {
       background: var(--green);
       color: #fff;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      font-size: 0.78rem;
-      padding: 0.8rem 0.6rem;
-      text-align: center;
-      white-space: nowrap;
-      position: sticky;
-      top: 0;
+      padding: 0.9rem 1.1rem;
     }
 
-    thead th.member-col-head {
-      text-align: left;
-      position: sticky;
-      left: 0;
-      z-index: 3;
-      background: var(--green-dark);
-    }
-
-    thead th .weekday {
-      display: block;
-      font-size: 0.68rem;
-      opacity: 0.85;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    thead th.today-col {
+    .day-card.today .day-card-header {
       background: var(--night-blue);
     }
 
-    tbody td, tbody th {
-      border-bottom: 1px solid var(--smoke);
-      padding: 0.5rem;
-      text-align: center;
-      vertical-align: middle;
-    }
-
-    tbody th.member-cell {
-      text-align: left;
+    .day-card-date {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
       font-weight: 600;
-      font-size: 0.9rem;
-      white-space: nowrap;
-      position: sticky;
-      left: 0;
-      background: var(--card);
-      z-index: 2;
-      border-right: 1px solid var(--smoke);
+      text-transform: capitalize;
+      margin-bottom: 0.6rem;
     }
 
-    tbody tr:nth-child(even) th.member-cell {
-      background: #fbfcfa;
+    .location-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
     }
 
-    td.today-col {
-      background: rgba(55,84,120,0.05);
+    .location-row label {
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.75);
+      flex-shrink: 0;
     }
 
-    .cell-wrap {
+    .day-card-body {
+      padding: 1rem 1.1rem 1.2rem;
       display: flex;
       flex-direction: column;
-      gap: 0.35rem;
-      align-items: stretch;
+      gap: 0.6rem;
     }
 
-    select.loc-select {
+    .section-heading {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 0.5rem 0 0.2rem;
+    }
+
+    .person-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .person-name {
+      flex: 0 0 128px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-main);
+      overflow-wrap: anywhere;
+    }
+
+    .guest-name-label {
+      flex: 0 0 128px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--green-dark);
+      overflow-wrap: anywhere;
+    }
+
+    select.status-select {
       font-family: 'Inter', sans-serif;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 500;
-      padding: 0.4rem 0.5rem;
+      padding: 0.35rem 1.3rem 0.35rem 0.5rem;
       border-radius: 7px;
       border: 1px solid var(--smoke);
-      background: #fff;
+      background-color: #fff;
       color: var(--text-main);
       cursor: pointer;
-      min-width: 150px;
+      flex: 0 0 118px;
       appearance: none;
       -webkit-appearance: none;
       background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%2323291f'/></svg>");
       background-repeat: no-repeat;
       background-position: right 0.5rem center;
-      padding-right: 1.4rem;
+    }
+
+    select.loc-select {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 0.35rem 1.3rem 0.35rem 0.55rem;
+      border-radius: 7px;
+      border: 1px solid rgba(255,255,255,0.5);
+      background-color: #fff;
+      color: var(--text-main);
+      cursor: pointer;
+      flex: 1 1 auto;
+      min-width: 140px;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%2323291f'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 0.5rem center;
+    }
+
+    input.remark-input, input.guest-name-input {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      padding: 0.35rem 0.55rem;
+      border-radius: 7px;
+      border: 1px solid var(--smoke);
+      background: #fff;
+      flex: 1 1 120px;
+      min-width: 0;
     }
 
     input.loc-custom {
       font-family: 'Inter', sans-serif;
-      font-size: 0.76rem;
-      padding: 0.35rem 0.5rem;
+      font-size: 0.78rem;
+      padding: 0.35rem 0.55rem;
       border-radius: 7px;
       border: 1px solid var(--sand);
       background: #fffdf7;
+      flex: 1 1 140px;
       display: none;
+      width: 100%;
+      margin-top: 0.5rem;
     }
 
     input.loc-custom.visible { display: block; }
 
+    .delete-btn {
+      flex: 0 0 auto;
+      width: 1.7rem;
+      height: 1.7rem;
+      border-radius: 6px;
+      border: 1px solid var(--smoke);
+      background: #fff;
+      color: var(--red);
+      cursor: pointer;
+      font-size: 0.85rem;
+      line-height: 1;
+    }
+
+    .delete-btn:hover { background: #fbeceb; border-color: #f0d9d7; }
+
+    .guest-section {
+      border-top: 1px dashed var(--smoke);
+      margin-top: 0.4rem;
+      padding-top: 0.7rem;
+    }
+
+    .no-guests {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .add-guest-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      margin-top: 0.6rem;
+      background: #fbfcfa;
+      border: 1px dashed var(--pistachio);
+      border-radius: 10px;
+      padding: 0.6rem;
+    }
+
+    .add-guest-btn {
+      background: var(--green);
+      color: #fff;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 7px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+
+    .add-guest-btn:hover { background: var(--green-dark); }
+
     footer {
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 0 1.25rem 3rem;
       color: var(--text-muted);
@@ -331,15 +424,12 @@
     }
 
     .toast.error { background: var(--red); }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     @media (max-width: 640px) {
       .controls { flex-direction: column; align-items: stretch; }
       .month-nav { justify-content: center; }
+      .days-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -347,7 +437,7 @@
 
   <header>
     <h1>Waar werkt Green Side?</h1>
-    <p>Overzicht van alle woensdagen en vrijdagen: wie is aanwezig en op welke locatie.</p>
+    <p>Overzicht van alle woensdagen en vrijdagen: locatie, wie aanwezig is, en wie er nog bij aansluit.</p>
   </header>
 
   <main>
@@ -369,14 +459,7 @@
 
     <div class="legend" id="legend"></div>
 
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr id="headerRow"></tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-      </table>
-    </div>
+    <div class="days-grid" id="daysGrid"></div>
   </main>
 
   <footer>
@@ -388,16 +471,10 @@
   <script type="module">
     // ─────────────────────────────────────────────────────────────────
     // FIREBASE CONFIGURATIE (Realtime Database)
-    // Vul hieronder de resterende gegevens van jouw Firebase-project in
-    // om deze planning live te delen met het hele team.
-    //
-    // "databaseURL" staat al ingevuld. Voor de rest: ga naar de Firebase
-    // Console ▸ Projectinstellingen (tandwiel) ▸ Jouw apps ▸ Web-app
-    // toevoegen (</> icoon als er nog geen webapp is) en kopieer het
-    // "firebaseConfig" object dat je te zien krijgt naar hieronder.
-    //
-    // Zet ook de Realtime Database regels open (Build ▸ Realtime
-    // Database ▸ Rules) zodat het team zonder inloggen kan lezen/schrijven:
+    // Ga naar de Firebase Console ▸ Projectinstellingen ▸ Jouw apps om
+    // deze waarden te vinden/bij te werken. Zet de Realtime Database
+    // regels open (Build ▸ Realtime Database ▸ Rules) zodat het team
+    // zonder inloggen kan lezen/schrijven:
     //
     //   {
     //     "rules": {
@@ -405,10 +482,6 @@
     //       ".write": true
     //     }
     //   }
-    //
-    //   (Let op: dit maakt de planning voor iedereen met de link
-    //   bewerkbaar zonder inloggen — prima voor een intern teamtooltje
-    //   zonder gevoelige data, maar geen echte toegangscontrole.)
     // ─────────────────────────────────────────────────────────────────
     const firebaseConfig = {
       apiKey: "AIzaSyCBLztTELWmA-ZWlA-CL0fNpCESQFCP6wo",
@@ -446,14 +519,26 @@
       'Anders...': { bg: '#e8d9b5', fg: '#23291f' },
     };
 
+    const STATUSES = ['Aanwezig', 'Afwezig', 'Online', 'Vakantie'];
+
+    const STATUS_COLORS = {
+      '': { bg: '#ffffff', fg: '#6b7568' },
+      'Aanwezig': { bg: '#397655', fg: '#ffffff' },
+      'Afwezig': { bg: '#e5e5e5', fg: '#6b7568' },
+      'Online': { bg: '#375478', fg: '#ffffff' },
+      'Vakantie': { bg: '#e8d9b5', fg: '#23291f' },
+    };
+
     const STORAGE_KEY = 'greenSideSchedule';
+    const SCHEDULE_ROOT = 'schedule';
     const MONTH_NAMES = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
-    const WEEKDAY_LABEL = { 3: 'wo', 5: 'vr' };
+    const WEEKDAY_NAMES = { 3: 'woensdag', 5: 'vrijdag' };
 
     let state = loadLocalState();
-    let firstSnapshot = true;
-    let scheduleRef = null;
-    let rtdbUpdate = null;
+    let db = null;
+    let rtdbRef = null, rtdbUpdate = null, rtdbPush = null, rtdbSet = null, rtdbRemove = null;
+    let firebaseReady = false;
+    let elementsByPath = new Map();
 
     const today = new Date();
     let viewYear = today.getFullYear();
@@ -469,10 +554,6 @@
 
     function cacheLocally() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    }
-
-    function cellKey(memberName, dateStr) {
-      return `${dateStr}__${memberName}`;
     }
 
     function isSameDate(a, b) {
@@ -498,146 +579,55 @@
       return `${y}-${m}-${day}`;
     }
 
-    function renderLegend() {
-      const legend = document.getElementById('legend');
-      legend.innerHTML = LOCATIONS.map(loc => {
-        const c = LOCATION_COLORS[loc];
-        return `<span class="swatch"><span class="dot" style="background:${c.bg}"></span>${loc === 'Anders...' ? 'Anders (aangepast)' : loc}</span>`;
-      }).join('');
+    function localGuestId() {
+      return 'g' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
     }
 
-    function renderMonthLabel() {
-      document.getElementById('monthLabel').textContent = `${MONTH_NAMES[viewMonth]} ${viewYear}`;
+    function pathRef(sub) {
+      return rtdbRef(db, `${SCHEDULE_ROOT}/${sub}`);
     }
 
-    function applySelectColor(select, loc) {
-      const c = LOCATION_COLORS[loc] || LOCATION_COLORS[''];
-      select.style.background = c.bg;
-      select.style.color = c.fg;
-      select.style.borderColor = loc ? 'transparent' : '#e5e5e5';
+    function writeUpdate(sub, value) {
+      return rtdbUpdate(pathRef(sub), value);
     }
 
-    function persistCell(key, entry) {
+    function removePath(sub) {
+      return rtdbRemove(pathRef(sub));
+    }
+
+    // Mutates local state immediately (instant UI feedback + local-only
+    // mode support), re-renders, and fires the remote write if configured.
+    function mutateAndPersist(dateStr, mutator, remoteWriteFn) {
+      state[dateStr] = state[dateStr] || {};
+      mutator(state[dateStr]);
       cacheLocally();
-      if (isConfigured && scheduleRef) {
-        rtdbUpdate(scheduleRef, { [key]: entry }).catch(err => {
+      renderCards();
+      if (firebaseReady && remoteWriteFn) {
+        remoteWriteFn().catch(err => {
           showToast('Opslaan mislukt — controleer je internetverbinding', true);
           console.error(err);
         });
       }
     }
 
-    function renderTable() {
-      const days = getScheduleDays(viewYear, viewMonth);
-      const headerRow = document.getElementById('headerRow');
-      const body = document.getElementById('tableBody');
-
-      let headerHtml = '<th class="member-col-head">Teamlid</th>';
-      days.forEach(d => {
-        const isToday = isSameDate(d, today);
-        headerHtml += `<th class="${isToday ? 'today-col' : ''}"><span class="weekday">${WEEKDAY_LABEL[d.getDay()]}</span>${d.getDate()}</th>`;
-      });
-      headerRow.innerHTML = headerHtml;
-
-      if (days.length === 0) {
-        body.innerHTML = `<tr><td colspan="1" style="padding:1.5rem;color:#6b7568;">Geen woensdagen of vrijdagen in deze maand.</td></tr>`;
-        return;
-      }
-
-      body.innerHTML = '';
-      MEMBERS.forEach(member => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<th class="member-cell">${member}</th>`;
-
-        days.forEach(d => {
-          const dateStr = dateToStr(d);
-          const key = cellKey(member, dateStr);
-          const entry = state[key] || { loc: '', custom: '' };
-          const isToday = isSameDate(d, today);
-
-          const td = document.createElement('td');
-          td.className = isToday ? 'today-col' : '';
-
-          const wrap = document.createElement('div');
-          wrap.className = 'cell-wrap';
-
-          const select = document.createElement('select');
-          select.className = 'loc-select';
-          select.dataset.key = key;
-
-          const emptyOpt = document.createElement('option');
-          emptyOpt.value = '';
-          emptyOpt.textContent = '– kies locatie –';
-          select.appendChild(emptyOpt);
-
-          LOCATIONS.forEach(loc => {
-            const opt = document.createElement('option');
-            opt.value = loc;
-            opt.textContent = loc;
-            select.appendChild(opt);
-          });
-
-          select.value = entry.loc || '';
-          applySelectColor(select, entry.loc || '');
-
-          const customInput = document.createElement('input');
-          customInput.type = 'text';
-          customInput.className = 'loc-custom' + (entry.loc === 'Anders...' ? ' visible' : '');
-          customInput.placeholder = 'Vul locatie in...';
-          customInput.value = entry.custom || '';
-          customInput.dataset.key = key;
-
-          select.addEventListener('change', () => {
-            const loc = select.value;
-            const existing = state[key] || {};
-            const newEntry = { loc, custom: loc === 'Anders...' ? (existing.custom || '') : '' };
-            state[key] = newEntry;
-            applySelectColor(select, loc);
-            customInput.classList.toggle('visible', loc === 'Anders...');
-            if (loc === 'Anders...') customInput.focus();
-            persistCell(key, newEntry);
-          });
-
-          customInput.addEventListener('blur', () => {
-            const existing = state[key] || { loc: 'Anders...', custom: '' };
-            const newEntry = { loc: existing.loc, custom: customInput.value };
-            state[key] = newEntry;
-            persistCell(key, newEntry);
-          });
-
-          wrap.appendChild(select);
-          wrap.appendChild(customInput);
-          td.appendChild(wrap);
-          tr.appendChild(td);
-        });
-
-        body.appendChild(tr);
-      });
+    function applyColor(el, colorMap, value) {
+      const c = colorMap[value] || colorMap[''];
+      el.style.background = c.bg;
+      el.style.color = c.fg;
+      el.style.borderColor = value ? 'transparent' : '#e5e5e5';
     }
 
-    // Lightweight sync that updates values in place without rebuilding
-    // the DOM, so an incoming live update doesn't interrupt someone who
-    // is actively typing in a different cell.
-    function syncVisibleCellsFromState() {
-      document.querySelectorAll('select.loc-select').forEach(select => {
-        const key = select.dataset.key;
-        const entry = state[key] || { loc: '', custom: '' };
-        if (document.activeElement === select) return;
-        if (select.value !== (entry.loc || '')) select.value = entry.loc || '';
-        applySelectColor(select, entry.loc || '');
-      });
-      document.querySelectorAll('input.loc-custom').forEach(input => {
-        const key = input.dataset.key;
-        const entry = state[key] || { loc: '', custom: '' };
-        input.classList.toggle('visible', entry.loc === 'Anders...');
-        if (document.activeElement === input) return;
-        if (input.value !== (entry.custom || '')) input.value = entry.custom || '';
-      });
+    function renderLegend() {
+      const legend = document.getElementById('legend');
+      const statusSwatches = STATUSES.map(s => {
+        const c = STATUS_COLORS[s];
+        return `<span class="swatch"><span class="dot" style="background:${c.bg}"></span>${s}</span>`;
+      }).join('');
+      legend.innerHTML = statusSwatches;
     }
 
-    function render() {
-      renderMonthLabel();
-      renderTable();
+    function renderMonthLabel() {
+      document.getElementById('monthLabel').textContent = `${MONTH_NAMES[viewMonth]} ${viewYear}`;
     }
 
     function setStatus(mode) {
@@ -661,6 +651,299 @@
       toast.classList.toggle('error', !!isError);
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 2600);
+    }
+
+    // ── Focus preservation across full re-renders ──
+    function captureFocus() {
+      const el = document.activeElement;
+      if (!el || !el.dataset || !el.dataset.path) return null;
+      const info = { path: el.dataset.path };
+      if (typeof el.selectionStart === 'number') {
+        info.selStart = el.selectionStart;
+        info.selEnd = el.selectionEnd;
+      }
+      return info;
+    }
+
+    function restoreFocus(info) {
+      if (!info) return;
+      const el = elementsByPath.get(info.path);
+      if (!el) return;
+      el.focus();
+      if (info.selStart != null && el.setSelectionRange) {
+        try { el.setSelectionRange(info.selStart, info.selEnd); } catch (e) { /* ignore */ }
+      }
+    }
+
+    function register(path, el) {
+      el.dataset.path = path;
+      elementsByPath.set(path, el);
+      return el;
+    }
+
+    function el(tag, className, text) {
+      const e = document.createElement(tag);
+      if (className) e.className = className;
+      if (text != null) e.textContent = text;
+      return e;
+    }
+
+    function buildLocationRow(dateStr, dayState) {
+      const location = dayState.location || { loc: '', custom: '' };
+
+      const row = el('div', 'location-row');
+      row.appendChild(el('label', null, 'Locatie'));
+
+      const select = document.createElement('select');
+      select.className = 'loc-select';
+      const emptyOpt = document.createElement('option');
+      emptyOpt.value = '';
+      emptyOpt.textContent = '– kies locatie –';
+      select.appendChild(emptyOpt);
+      LOCATIONS.forEach(loc => {
+        const opt = document.createElement('option');
+        opt.value = loc;
+        opt.textContent = loc;
+        select.appendChild(opt);
+      });
+      select.value = location.loc || '';
+      applyColor(select, LOCATION_COLORS, location.loc || '');
+      register(`loc|${dateStr}`, select);
+
+      const customInput = document.createElement('input');
+      customInput.type = 'text';
+      customInput.className = 'loc-custom' + (location.loc === 'Anders...' ? ' visible' : '');
+      customInput.placeholder = 'Vul locatie in...';
+      customInput.value = location.custom || '';
+      register(`loc-custom|${dateStr}`, customInput);
+
+      select.addEventListener('change', () => {
+        const loc = select.value;
+        const existingCustom = (state[dateStr].location && state[dateStr].location.custom) || '';
+        const entry = { loc, custom: loc === 'Anders...' ? existingCustom : '' };
+        mutateAndPersist(dateStr, d => { d.location = entry; }, () => writeUpdate(`${dateStr}/location`, entry));
+      });
+
+      customInput.addEventListener('blur', () => {
+        const existing = state[dateStr].location || { loc: 'Anders...', custom: '' };
+        const entry = { loc: existing.loc, custom: customInput.value };
+        mutateAndPersist(dateStr, d => { d.location = entry; }, () => writeUpdate(`${dateStr}/location`, entry));
+      });
+
+      row.appendChild(select);
+      row.appendChild(customInput);
+      return row;
+    }
+
+    function buildStatusSelect(path, value, onChange) {
+      const select = document.createElement('select');
+      select.className = 'status-select';
+      const emptyOpt = document.createElement('option');
+      emptyOpt.value = '';
+      emptyOpt.textContent = '– status –';
+      select.appendChild(emptyOpt);
+      STATUSES.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s;
+        opt.textContent = s;
+        select.appendChild(opt);
+      });
+      select.value = value || '';
+      applyColor(select, STATUS_COLORS, value || '');
+      register(path, select);
+      select.addEventListener('change', () => {
+        applyColor(select, STATUS_COLORS, select.value);
+        onChange(select.value);
+      });
+      return select;
+    }
+
+    function buildRemarkInput(path, value, placeholder, onBlur) {
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'remark-input';
+      input.placeholder = placeholder;
+      input.value = value || '';
+      register(path, input);
+      input.addEventListener('blur', () => onBlur(input.value));
+      return input;
+    }
+
+    function buildMemberRow(dateStr, member) {
+      const memberState = (state[dateStr].members && state[dateStr].members[member]) || {};
+      const row = el('div', 'person-row');
+      row.appendChild(el('span', 'person-name', member));
+
+      const statusSelect = buildStatusSelect(`member-status|${dateStr}|${member}`, memberState.status, value => {
+        const patch = { status: value };
+        mutateAndPersist(dateStr, d => {
+          d.members = d.members || {};
+          d.members[member] = { ...(d.members[member] || {}), ...patch };
+        }, () => writeUpdate(`${dateStr}/members/${member}`, patch));
+      });
+
+      const remarkInput = buildRemarkInput(`member-remark|${dateStr}|${member}`, memberState.remark, 'Opmerking (optioneel)', value => {
+        const patch = { remark: value };
+        mutateAndPersist(dateStr, d => {
+          d.members = d.members || {};
+          d.members[member] = { ...(d.members[member] || {}), ...patch };
+        }, () => writeUpdate(`${dateStr}/members/${member}`, patch));
+      });
+
+      row.appendChild(statusSelect);
+      row.appendChild(remarkInput);
+      return row;
+    }
+
+    function buildGuestRow(dateStr, guestId, guest) {
+      const row = el('div', 'person-row');
+      row.appendChild(el('span', 'guest-name-label', guest.name));
+
+      const statusSelect = buildStatusSelect(`guest-status|${dateStr}|${guestId}`, guest.status, value => {
+        const patch = { status: value };
+        mutateAndPersist(dateStr, d => {
+          d.guests = d.guests || {};
+          d.guests[guestId] = { ...(d.guests[guestId] || {}), ...patch };
+        }, () => writeUpdate(`${dateStr}/guests/${guestId}`, patch));
+      });
+
+      const remarkInput = buildRemarkInput(`guest-remark|${dateStr}|${guestId}`, guest.remark, 'Opmerking (optioneel)', value => {
+        const patch = { remark: value };
+        mutateAndPersist(dateStr, d => {
+          d.guests = d.guests || {};
+          d.guests[guestId] = { ...(d.guests[guestId] || {}), ...patch };
+        }, () => writeUpdate(`${dateStr}/guests/${guestId}`, patch));
+      });
+
+      const delBtn = el('button', 'delete-btn', '✕');
+      delBtn.type = 'button';
+      delBtn.setAttribute('aria-label', `${guest.name} verwijderen`);
+      delBtn.addEventListener('click', () => {
+        mutateAndPersist(dateStr, d => {
+          if (d.guests) delete d.guests[guestId];
+        }, () => removePath(`${dateStr}/guests/${guestId}`));
+      });
+
+      row.appendChild(statusSelect);
+      row.appendChild(remarkInput);
+      row.appendChild(delBtn);
+      return row;
+    }
+
+    function buildAddGuestForm(dateStr) {
+      const form = el('div', 'add-guest-form');
+
+      const nameInput = document.createElement('input');
+      nameInput.type = 'text';
+      nameInput.className = 'guest-name-input';
+      nameInput.placeholder = 'Jouw naam';
+      register(`guest-new-name|${dateStr}`, nameInput);
+
+      const statusSelect = document.createElement('select');
+      statusSelect.className = 'status-select';
+      const emptyOpt = document.createElement('option');
+      emptyOpt.value = '';
+      emptyOpt.textContent = '– status –';
+      statusSelect.appendChild(emptyOpt);
+      STATUSES.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s;
+        opt.textContent = s;
+        statusSelect.appendChild(opt);
+      });
+      register(`guest-new-status|${dateStr}`, statusSelect);
+
+      const remarkInput = document.createElement('input');
+      remarkInput.type = 'text';
+      remarkInput.className = 'remark-input';
+      remarkInput.placeholder = 'Opmerking (optioneel)';
+      register(`guest-new-remark|${dateStr}`, remarkInput);
+
+      const addBtn = el('button', 'add-guest-btn', '+ Toevoegen');
+      addBtn.type = 'button';
+      addBtn.addEventListener('click', () => {
+        const name = nameInput.value.trim();
+        if (!name) { nameInput.focus(); return; }
+        if (!statusSelect.value) { statusSelect.focus(); return; }
+        const guestData = { name, status: statusSelect.value, remark: remarkInput.value.trim() };
+
+        if (firebaseReady) {
+          const newRef = rtdbPush(pathRef(`${dateStr}/guests`));
+          const id = newRef.key;
+          mutateAndPersist(dateStr, d => {
+            d.guests = d.guests || {};
+            d.guests[id] = guestData;
+          }, () => rtdbSet(newRef, guestData));
+        } else {
+          const id = localGuestId();
+          mutateAndPersist(dateStr, d => {
+            d.guests = d.guests || {};
+            d.guests[id] = guestData;
+          }, null);
+        }
+      });
+
+      form.appendChild(nameInput);
+      form.appendChild(statusSelect);
+      form.appendChild(remarkInput);
+      form.appendChild(addBtn);
+      return form;
+    }
+
+    function buildDayCard(dateStr, dateObj) {
+      state[dateStr] = state[dateStr] || {};
+      const dayState = state[dateStr];
+      const isToday = isSameDate(dateObj, today);
+
+      const card = el('div', 'day-card' + (isToday ? ' today' : ''));
+
+      const headerEl = el('div', 'day-card-header');
+      const weekday = WEEKDAY_NAMES[dateObj.getDay()];
+      headerEl.appendChild(el('div', 'day-card-date', `${weekday} ${dateObj.getDate()} ${MONTH_NAMES[dateObj.getMonth()]}`));
+      headerEl.appendChild(buildLocationRow(dateStr, dayState));
+      card.appendChild(headerEl);
+
+      const body = el('div', 'day-card-body');
+      body.appendChild(el('div', 'section-heading', 'Team'));
+      MEMBERS.forEach(member => body.appendChild(buildMemberRow(dateStr, member)));
+
+      const guestSection = el('div', 'guest-section');
+      guestSection.appendChild(el('div', 'section-heading', 'Overige aanwezigen'));
+
+      const guestIds = Object.keys(dayState.guests || {});
+      if (guestIds.length === 0) {
+        guestSection.appendChild(el('p', 'no-guests', 'Nog niemand aangemeld.'));
+      } else {
+        guestIds.forEach(id => guestSection.appendChild(buildGuestRow(dateStr, id, dayState.guests[id])));
+      }
+      guestSection.appendChild(buildAddGuestForm(dateStr));
+      body.appendChild(guestSection);
+
+      card.appendChild(body);
+      return card;
+    }
+
+    function renderCards() {
+      const focusInfo = captureFocus();
+      elementsByPath = new Map();
+
+      const days = getScheduleDays(viewYear, viewMonth);
+      const grid = document.getElementById('daysGrid');
+      grid.innerHTML = '';
+
+      if (days.length === 0) {
+        grid.innerHTML = `<p style="padding:1.5rem;color:#6b7568;">Geen woensdagen of vrijdagen in deze maand.</p>`;
+        return;
+      }
+
+      days.forEach(d => grid.appendChild(buildDayCard(dateToStr(d), d)));
+
+      restoreFocus(focusInfo);
+    }
+
+    function render() {
+      renderMonthLabel();
+      renderCards();
     }
 
     document.getElementById('prevMonth').addEventListener('click', () => {
@@ -690,28 +973,30 @@
     } else {
       document.getElementById('setupBanner').classList.remove('visible');
       import('https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js').then(async ({ initializeApp }) => {
-        const { getDatabase, ref, onValue, update } = await import('https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js');
+        const { getDatabase, ref, onValue, update, push, set, remove } = await import('https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js');
 
         const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        scheduleRef = ref(db, 'schedule');
+        db = getDatabase(app);
+        rtdbRef = ref;
         rtdbUpdate = update;
+        rtdbPush = push;
+        rtdbSet = set;
+        rtdbRemove = remove;
+        firebaseReady = true;
 
-        onValue(scheduleRef, snap => {
+        onValue(rtdbRef(db, SCHEDULE_ROOT), snap => {
+          firebaseReady = true;
           state = snap.val() || {};
           cacheLocally();
-          if (firstSnapshot) {
-            firstSnapshot = false;
-            render();
-          } else {
-            syncVisibleCellsFromState();
-          }
+          renderCards();
           setStatus('live');
         }, err => {
+          firebaseReady = false;
           console.error(err);
           setStatus('offline');
         });
       }).catch(err => {
+        firebaseReady = false;
         console.error('Kon Firebase niet laden:', err);
         setStatus('offline');
       });
