@@ -271,14 +271,21 @@
       letter-spacing: 0.05em;
     }
 
-    input.sales-hour-input {
-      width: 4.2rem;
-      padding: 0.3rem 0.4rem;
-      border: 1px solid var(--smoke);
-      border-radius: 6px;
-      font-size: 0.85rem;
-      text-align: center;
+    select.sales-hour-select {
       font-family: 'Inter', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 0.35rem 1.4rem 0.35rem 0.6rem;
+      border-radius: 7px;
+      border: 1px solid var(--smoke);
+      background-color: #fff;
+      color: var(--green-dark);
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%2323291f'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 0.55rem center;
     }
 
     .section-heading {
@@ -599,6 +606,9 @@
       'Online': { bg: '#375478', fg: '#ffffff' },
       'Vakantie': { bg: '#e8d9b5', fg: '#23291f' },
     };
+
+    const SALES_HOUR_OPTIONS = [];
+    for (let h = 9; h <= 16; h++) SALES_HOUR_OPTIONS.push(`${h}-${h + 1}`);
 
     const STORAGE_KEY = 'greenSideSchedule';
     const SCHEDULE_ROOT = 'schedule';
@@ -1012,34 +1022,33 @@
 
     function buildSalesHourBar(dateStr, dayState) {
       const bar = el('div', 'sales-hour-bar');
-      bar.appendChild(el('span', 'sales-hour-label', 'Start sales uur'));
+      bar.appendChild(el('span', 'sales-hour-label', 'Sales uur'));
 
-      const input = document.createElement('input');
-      input.type = 'number';
-      input.className = 'sales-hour-input';
-      input.min = '9';
-      input.max = '17';
-      input.step = '1';
-      input.placeholder = '9–17';
-      input.value = dayState.salesHour != null ? dayState.salesHour : '';
-      register(`sales-hour|${dateStr}`, input);
+      const select = document.createElement('select');
+      select.className = 'sales-hour-select';
+      const emptyOpt = document.createElement('option');
+      emptyOpt.value = '';
+      emptyOpt.textContent = '– kies uur –';
+      select.appendChild(emptyOpt);
+      SALES_HOUR_OPTIONS.forEach(range => {
+        const opt = document.createElement('option');
+        opt.value = range;
+        opt.textContent = range;
+        select.appendChild(opt);
+      });
+      select.value = dayState.salesHour || '';
+      register(`sales-hour|${dateStr}`, select);
 
-      input.addEventListener('blur', () => {
-        const raw = input.value.trim();
-        if (raw === '') {
+      select.addEventListener('change', () => {
+        const val = select.value;
+        if (val === '') {
           mutateAndPersist(dateStr, d => { delete d.salesHour; }, () => writeSet(`${dateStr}/salesHour`, null));
-          return;
+        } else {
+          mutateAndPersist(dateStr, d => { d.salesHour = val; }, () => writeSet(`${dateStr}/salesHour`, val));
         }
-        let num = parseInt(raw, 10);
-        if (isNaN(num)) {
-          input.value = (state[dateStr] && state[dateStr].salesHour != null) ? state[dateStr].salesHour : '';
-          return;
-        }
-        num = Math.min(17, Math.max(9, num));
-        mutateAndPersist(dateStr, d => { d.salesHour = num; }, () => writeSet(`${dateStr}/salesHour`, num));
       });
 
-      bar.appendChild(input);
+      bar.appendChild(select);
       return bar;
     }
 
