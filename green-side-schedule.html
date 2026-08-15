@@ -387,35 +387,33 @@
 
   <script type="module">
     // ─────────────────────────────────────────────────────────────────
-    // FIREBASE CONFIGURATIE
-    // Vul hieronder de gegevens van jouw eigen Firebase-project in om
-    // deze planning live te delen met het hele team:
+    // FIREBASE CONFIGURATIE (Realtime Database)
+    // Vul hieronder de resterende gegevens van jouw Firebase-project in
+    // om deze planning live te delen met het hele team.
     //
-    //  1. Ga naar https://console.firebase.google.com/ en maak een
-    //     (gratis) project aan, bv. "green-side-schedule".
-    //  2. Ga naar Build ▸ Firestore Database ▸ "Database maken".
-    //     Kies een locatie en start in "test mode" (of stel de regels
-    //     hieronder in via Firestore ▸ Rules):
+    // "databaseURL" staat al ingevuld. Voor de rest: ga naar de Firebase
+    // Console ▸ Projectinstellingen (tandwiel) ▸ Jouw apps ▸ Web-app
+    // toevoegen (</> icoon als er nog geen webapp is) en kopieer het
+    // "firebaseConfig" object dat je te zien krijgt naar hieronder.
     //
-    //       rules_version = '2';
-    //       service cloud.firestore {
-    //         match /databases/{database}/documents {
-    //           match /greenSideSchedule/{doc} {
-    //             allow read, write: if true;
-    //           }
-    //         }
-    //       }
+    // Zet ook de Realtime Database regels open (Build ▸ Realtime
+    // Database ▸ Rules) zodat het team zonder inloggen kan lezen/schrijven:
     //
-    //     (Let op: dit maakt de planning voor iedereen met de link
-    //     bewerkbaar zonder inloggen — prima voor een intern teamtooltje
-    //     zonder gevoelige data, maar geen echte toegangscontrole.)
-    //  3. Ga naar Projectinstellingen ▸ Jouw apps ▸ Web-app toevoegen
-    //     (</> icoon), geef een naam, en kopieer het "firebaseConfig"
-    //     object dat je te zien krijgt naar hieronder.
+    //   {
+    //     "rules": {
+    //       ".read": true,
+    //       ".write": true
+    //     }
+    //   }
+    //
+    //   (Let op: dit maakt de planning voor iedereen met de link
+    //   bewerkbaar zonder inloggen — prima voor een intern teamtooltje
+    //   zonder gevoelige data, maar geen echte toegangscontrole.)
     // ─────────────────────────────────────────────────────────────────
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
       authDomain: "YOUR_PROJECT.firebaseapp.com",
+      databaseURL: "https://waar-werkt-green-side-default-rtdb.europe-west1.firebasedatabase.app",
       projectId: "YOUR_PROJECT_ID",
       storageBucket: "YOUR_PROJECT.appspot.com",
       messagingSenderId: "YOUR_SENDER_ID",
@@ -454,8 +452,8 @@
 
     let state = loadLocalState();
     let firstSnapshot = true;
-    let scheduleDocRef = null;
-    let firestoreSetDoc = null;
+    let scheduleRef = null;
+    let rtdbUpdate = null;
 
     const today = new Date();
     let viewYear = today.getFullYear();
@@ -521,8 +519,8 @@
 
     function persistCell(key, entry) {
       cacheLocally();
-      if (isConfigured && scheduleDocRef) {
-        firestoreSetDoc(scheduleDocRef, { [key]: entry }, { merge: true }).catch(err => {
+      if (isConfigured && scheduleRef) {
+        rtdbUpdate(scheduleRef, { [key]: entry }).catch(err => {
           showToast('Opslaan mislukt — controleer je internetverbinding', true);
           console.error(err);
         });
@@ -692,15 +690,15 @@
     } else {
       document.getElementById('setupBanner').classList.remove('visible');
       import('https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js').then(async ({ initializeApp }) => {
-        const { getFirestore, doc, onSnapshot, setDoc } = await import('https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js');
+        const { getDatabase, ref, onValue, update } = await import('https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js');
 
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        scheduleDocRef = doc(db, 'greenSideSchedule', 'schedule');
-        firestoreSetDoc = setDoc;
+        const db = getDatabase(app);
+        scheduleRef = ref(db, 'schedule');
+        rtdbUpdate = update;
 
-        onSnapshot(scheduleDocRef, snap => {
-          state = snap.exists() ? snap.data() : {};
+        onValue(scheduleRef, snap => {
+          state = snap.val() || {};
           cacheLocally();
           if (firstSnapshot) {
             firstSnapshot = false;
