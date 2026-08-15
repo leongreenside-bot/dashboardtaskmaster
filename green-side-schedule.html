@@ -251,6 +251,36 @@
       gap: 0.6rem;
     }
 
+    .sales-hour-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      background: #ffffff;
+      border: 2px solid var(--green);
+      border-radius: 10px;
+      padding: 0.5rem 0.7rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .sales-hour-label {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--green-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    input.sales-hour-input {
+      width: 4.2rem;
+      padding: 0.3rem 0.4rem;
+      border: 1px solid var(--smoke);
+      border-radius: 6px;
+      font-size: 0.85rem;
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+    }
+
     .section-heading {
       font-size: 0.7rem;
       letter-spacing: 0.1em;
@@ -565,7 +595,7 @@
     const STATUS_COLORS = {
       '': { bg: '#ffffff', fg: '#6b7568' },
       'Aanwezig': { bg: '#397655', fg: '#ffffff' },
-      'Afwezig': { bg: '#e5e5e5', fg: '#6b7568' },
+      'Afwezig': { bg: '#b3453f', fg: '#ffffff' },
       'Online': { bg: '#375478', fg: '#ffffff' },
       'Vakantie': { bg: '#e8d9b5', fg: '#23291f' },
     };
@@ -639,6 +669,10 @@
 
     function removePath(sub) {
       return rtdbRemove(pathRef(sub));
+    }
+
+    function writeSet(sub, value) {
+      return rtdbSet(pathRef(sub), value);
     }
 
     // Mutates local state immediately (instant UI feedback + local-only
@@ -976,6 +1010,39 @@
       return form;
     }
 
+    function buildSalesHourBar(dateStr, dayState) {
+      const bar = el('div', 'sales-hour-bar');
+      bar.appendChild(el('span', 'sales-hour-label', 'Start sales uur'));
+
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.className = 'sales-hour-input';
+      input.min = '9';
+      input.max = '17';
+      input.step = '1';
+      input.placeholder = '9–17';
+      input.value = dayState.salesHour != null ? dayState.salesHour : '';
+      register(`sales-hour|${dateStr}`, input);
+
+      input.addEventListener('blur', () => {
+        const raw = input.value.trim();
+        if (raw === '') {
+          mutateAndPersist(dateStr, d => { delete d.salesHour; }, () => writeSet(`${dateStr}/salesHour`, null));
+          return;
+        }
+        let num = parseInt(raw, 10);
+        if (isNaN(num)) {
+          input.value = (state[dateStr] && state[dateStr].salesHour != null) ? state[dateStr].salesHour : '';
+          return;
+        }
+        num = Math.min(17, Math.max(9, num));
+        mutateAndPersist(dateStr, d => { d.salesHour = num; }, () => writeSet(`${dateStr}/salesHour`, num));
+      });
+
+      bar.appendChild(input);
+      return bar;
+    }
+
     function buildDayCard(dateStr, dateObj) {
       state[dateStr] = state[dateStr] || {};
       const dayState = state[dateStr];
@@ -990,6 +1057,9 @@
       card.appendChild(headerEl);
 
       const body = el('div', 'day-card-body');
+      if (dateObj.getDay() === 3) {
+        body.appendChild(buildSalesHourBar(dateStr, dayState));
+      }
       body.appendChild(el('div', 'section-heading', 'Team'));
       MEMBERS.forEach(member => body.appendChild(buildMemberRow(dateStr, member)));
 
