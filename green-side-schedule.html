@@ -99,7 +99,7 @@
       gap: 0.75rem;
     }
 
-    .month-nav button {
+    .nav-arrow-btn {
       background: var(--card);
       border: 1px solid var(--smoke);
       color: var(--green-dark);
@@ -111,7 +111,7 @@
       transition: background 0.15s, border-color 0.15s;
     }
 
-    .month-nav button:hover {
+    .nav-arrow-btn:hover {
       background: var(--pistachio);
       border-color: var(--green);
     }
@@ -134,6 +134,7 @@
       border-radius: 8px;
       font-size: 0.85rem;
       font-weight: 500;
+      white-space: nowrap;
       cursor: pointer;
     }
 
@@ -527,9 +528,9 @@
 
     <div class="controls">
       <div class="month-nav">
-        <button id="prevMonth" aria-label="Vorige maand">&#8592;</button>
+        <button class="nav-arrow-btn" id="prevMonth" aria-label="Vorige maand">&#8592;</button>
         <span class="month-label" id="monthLabel"></span>
-        <button id="nextMonth" aria-label="Volgende maand">&#8594;</button>
+        <button class="nav-arrow-btn" id="nextMonth" aria-label="Volgende maand">&#8594;</button>
         <button class="today-btn" id="todayBtn">Vandaag</button>
       </div>
       <span class="status-badge" id="statusBadge"><span class="status-dot"></span><span id="statusText">Lokaal (niet gedeeld)</span></span>
