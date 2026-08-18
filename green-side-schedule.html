@@ -646,6 +646,10 @@
       return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
     }
 
+    function isPastDate(d) {
+      return !isSameDate(d, today) && d < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    }
+
     function getScheduleDays(year, month) {
       const days = [];
       const date = new Date(year, month, 1);
@@ -1092,12 +1096,16 @@
       const focusInfo = captureFocus();
       elementsByPath = new Map();
 
-      const days = getScheduleDays(viewYear, viewMonth);
+      const allDays = getScheduleDays(viewYear, viewMonth);
+      const days = allDays.filter(d => !isPastDate(d));
       const grid = document.getElementById('daysGrid');
       grid.innerHTML = '';
 
       if (days.length === 0) {
-        grid.innerHTML = `<p style="padding:1.5rem;color:#6b7568;">Geen woensdagen of vrijdagen in deze maand.</p>`;
+        const msg = allDays.length === 0
+          ? 'Geen woensdagen of vrijdagen in deze maand.'
+          : 'Alle woensdagen en vrijdagen deze maand liggen al in het verleden.';
+        grid.innerHTML = `<p style="padding:1.5rem;color:#6b7568;">${msg}</p>`;
         return;
       }
 
