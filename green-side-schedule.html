@@ -56,7 +56,7 @@
     }
 
     main {
-      max-width: 1200px;
+      max-width: 100%;
       margin: 0 auto;
       padding: 2rem 1.25rem 4rem;
     }
@@ -72,6 +72,9 @@
       font-size: 0.88rem;
       line-height: 1.6;
       display: none;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .setup-banner.visible { display: block; }
@@ -91,39 +94,9 @@
       justify-content: space-between;
       gap: 1rem;
       margin-bottom: 1.25rem;
-    }
-
-    .month-nav {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .nav-arrow-btn {
-      background: var(--card);
-      border: 1px solid var(--smoke);
-      color: var(--green-dark);
-      width: 2.4rem;
-      height: 2.4rem;
-      border-radius: 8px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: background 0.15s, border-color 0.15s;
-    }
-
-    .nav-arrow-btn:hover {
-      background: var(--pistachio);
-      border-color: var(--green);
-    }
-
-    .month-nav .month-label {
-      font-family: 'Poppins', sans-serif;
-      font-size: 1.15rem;
-      font-weight: 600;
-      color: var(--green-dark);
-      min-width: 170px;
-      text-align: center;
-      text-transform: capitalize;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .today-btn {
@@ -171,9 +144,12 @@
       display: flex;
       flex-wrap: wrap;
       gap: 0.6rem 1.2rem;
-      margin-bottom: 1.75rem;
+      margin-bottom: 1.25rem;
       font-size: 0.82rem;
       color: var(--text-muted);
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .legend .swatch {
@@ -190,218 +166,180 @@
       border: 1px solid rgba(0,0,0,0.08);
     }
 
-    /* ── Days grid ── */
-    .days-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-      gap: 1.4rem;
-    }
-
-    .day-card {
-      background: var(--card);
+    /* ── Schedule grid (spreadsheet-style) ── */
+    .schedule-wrap {
+      overflow-x: auto;
       border: 1px solid var(--smoke);
       border-radius: 14px;
+      background: var(--card);
       box-shadow: 0 2px 10px rgba(35,41,31,0.05);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
     }
 
-    .day-card.today {
-      border-color: var(--night-blue);
-      box-shadow: 0 0 0 2px rgba(55,84,120,0.18);
+    .schedule-grid {
+      display: grid;
+      align-items: stretch;
     }
 
-    .day-card-header {
-      background: var(--green);
-      color: #fff;
-      padding: 0.9rem 1.1rem;
-    }
-
-    .day-card.today .day-card-header {
-      background: var(--night-blue);
-    }
-
-    .day-card-date {
-      font-family: 'Poppins', sans-serif;
-      font-size: 1rem;
-      font-weight: 600;
-      text-transform: capitalize;
-      margin-bottom: 0.6rem;
-    }
-
-    .location-row {
+    .g-cell {
+      padding: 0.45rem 0.5rem;
+      border-bottom: 1px solid var(--smoke);
+      border-right: 1px solid #f0f1ee;
       display: flex;
       align-items: center;
-      gap: 0.6rem;
-      flex-wrap: wrap;
+      justify-content: center;
+      min-width: 0;
     }
 
-    .location-row label {
-      font-size: 0.72rem;
+    .g-label {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background: var(--card);
+      justify-content: flex-start;
+      font-weight: 600;
+      font-size: 0.82rem;
+      padding: 0.5rem 0.8rem;
+      border-right: 2px solid var(--smoke);
+      white-space: nowrap;
+    }
+
+    .g-label.section-label {
+      font-size: 0.68rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.75);
-      flex-shrink: 0;
-    }
-
-    .day-card-body {
-      padding: 1rem 1.1rem 1.2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-    }
-
-    .sales-hour-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.6rem;
-      background: #ffffff;
-      border: 2px solid var(--green);
-      border-radius: 10px;
-      padding: 0.5rem 0.7rem;
-      margin-bottom: 0.3rem;
-    }
-
-    .sales-hour-label {
-      font-size: 0.76rem;
-      font-weight: 700;
-      color: var(--green-dark);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    select.sales-hour-select {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.82rem;
-      font-weight: 600;
-      padding: 0.35rem 1.4rem 0.35rem 0.6rem;
-      border-radius: 7px;
-      border: 1px solid var(--smoke);
-      background-color: #fff;
-      color: var(--green-dark);
-      cursor: pointer;
-      appearance: none;
-      -webkit-appearance: none;
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%2323291f'/></svg>");
-      background-repeat: no-repeat;
-      background-position: right 0.55rem center;
-    }
-
-    .section-heading {
-      font-size: 0.7rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
       color: var(--text-muted);
-      margin: 0.5rem 0 0.2rem;
+      font-weight: 700;
+      background: #fbfcfa;
     }
 
-    .person-row {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
+    .g-cell.section-cell {
+      background: #fbfcfa;
     }
 
-    .person-name {
-      flex: 0 0 128px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-main);
-      overflow-wrap: anywhere;
+    .g-header {
+      background: var(--green);
+      color: #fff;
+      flex-direction: column;
+      gap: 0.1rem;
+      font-family: 'Poppins', sans-serif;
+      padding: 0.6rem 0.3rem;
+      border-right: 1px solid rgba(255,255,255,0.15);
+      border-bottom: none;
     }
 
-    .guest-name-label {
-      flex: 0 0 128px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--green-dark);
-      overflow-wrap: anywhere;
+    .g-header.today { background: var(--night-blue); }
+
+    .g-header .wk { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.9; }
+    .g-header .dt { font-size: 0.82rem; font-weight: 600; }
+
+    .g-corner {
+      position: sticky;
+      left: 0;
+      z-index: 3;
+      background: var(--green-dark);
     }
+
+    .g-cell.today-col { background: rgba(55,84,120,0.05); }
 
     select.status-select {
       font-family: 'Inter', sans-serif;
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       font-weight: 500;
-      padding: 0.35rem 1.3rem 0.35rem 0.5rem;
+      padding: 0.3rem 1.2rem 0.3rem 0.4rem;
       border-radius: 7px;
       border: 1px solid var(--smoke);
       background-color: #fff;
       color: var(--text-main);
       cursor: pointer;
-      flex: 0 0 118px;
+      width: 100%;
       appearance: none;
       -webkit-appearance: none;
       background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%2323291f'/></svg>");
       background-repeat: no-repeat;
-      background-position: right 0.5rem center;
+      background-position: right 0.4rem center;
     }
 
     select.loc-select {
       font-family: 'Inter', sans-serif;
-      font-size: 0.8rem;
+      font-size: 0.74rem;
       font-weight: 500;
-      padding: 0.35rem 1.3rem 0.35rem 0.55rem;
+      padding: 0.3rem 1.2rem 0.3rem 0.4rem;
       border-radius: 7px;
-      border: 1px solid rgba(255,255,255,0.5);
+      border: 1px solid var(--smoke);
       background-color: #fff;
       color: var(--text-main);
       cursor: pointer;
-      flex: 1 1 auto;
-      min-width: 140px;
+      width: 100%;
       appearance: none;
       -webkit-appearance: none;
       background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%2323291f'/></svg>");
       background-repeat: no-repeat;
-      background-position: right 0.5rem center;
+      background-position: right 0.4rem center;
     }
 
-    input.remark-input, input.guest-name-input {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.78rem;
-      padding: 0.35rem 0.55rem;
-      border-radius: 7px;
-      border: 1px solid var(--smoke);
-      background: #fff;
-      flex: 1 1 120px;
-      min-width: 0;
+    .locatie-bg {
+      background: var(--pistachio) !important;
     }
 
     input.loc-custom {
       font-family: 'Inter', sans-serif;
-      font-size: 0.78rem;
-      padding: 0.35rem 0.55rem;
+      font-size: 0.74rem;
+      padding: 0.3rem 0.4rem;
       border-radius: 7px;
       border: 1px solid var(--sand);
       background: #fffdf7;
-      flex: 1 1 140px;
-      display: none;
       width: 100%;
-      margin-top: 0.5rem;
+      margin-top: 0.3rem;
+      display: none;
     }
 
     input.loc-custom.visible { display: block; }
 
-    .delete-btn {
-      flex: 0 0 auto;
-      width: 1.7rem;
-      height: 1.7rem;
-      border-radius: 6px;
+    input.remark-input {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.74rem;
+      padding: 0.3rem 0.4rem;
+      border-radius: 7px;
       border: 1px solid var(--smoke);
       background: #fff;
-      color: var(--red);
-      cursor: pointer;
-      font-size: 0.85rem;
-      line-height: 1;
+      width: 100%;
     }
 
-    .delete-btn:hover { background: #fbeceb; border-color: #f0d9d7; }
+    /* ── Guests cell ── */
+    .guests-cell {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.35rem;
+      padding: 0.5rem 0.4rem;
+    }
+
+    .guest-entry {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      background: #fbfcfa;
+      border: 1px solid var(--pistachio);
+      border-radius: 8px;
+      padding: 0.35rem;
+    }
+
+    .guest-entry-name {
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: var(--green-dark);
+      overflow-wrap: anywhere;
+    }
+
+    .guest-entry-actions {
+      display: flex;
+      gap: 0.3rem;
+      align-items: center;
+    }
 
     .comment-toggle {
       flex: 0 0 auto;
-      width: 1.7rem;
-      height: 1.7rem;
+      width: 1.5rem;
+      height: 1.5rem;
       border-radius: 6px;
       border: 1px solid var(--smoke);
       background: #fff;
@@ -439,40 +377,62 @@
       border: 1.5px solid #fff;
     }
 
-    .guest-section {
-      border-top: 1px dashed var(--smoke);
-      margin-top: 0.4rem;
-      padding-top: 0.7rem;
+    .delete-btn {
+      flex: 0 0 auto;
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 6px;
+      border: 1px solid var(--smoke);
+      background: #fff;
+      color: var(--red);
+      cursor: pointer;
+      font-size: 0.78rem;
+      line-height: 1;
     }
 
-    .no-guests {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      font-style: italic;
+    .delete-btn:hover { background: #fbeceb; border-color: #f0d9d7; }
+
+    .add-guest-toggle {
+      background: transparent;
+      border: 1px dashed var(--pistachio);
+      color: var(--green-dark);
+      border-radius: 8px;
+      padding: 0.3rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
     }
+
+    .add-guest-toggle:hover { background: var(--pistachio); }
 
     .add-guest-form {
       display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      align-items: center;
-      margin-top: 0.6rem;
+      flex-direction: column;
+      gap: 0.3rem;
       background: #fbfcfa;
       border: 1px dashed var(--pistachio);
-      border-radius: 10px;
-      padding: 0.6rem;
+      border-radius: 8px;
+      padding: 0.4rem;
+    }
+
+    .add-guest-form input.guest-name-input {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.74rem;
+      padding: 0.3rem 0.4rem;
+      border-radius: 6px;
+      border: 1px solid var(--smoke);
+      width: 100%;
     }
 
     .add-guest-btn {
       background: var(--green);
       color: #fff;
       border: none;
-      padding: 0.4rem 0.8rem;
+      padding: 0.3rem 0.5rem;
       border-radius: 7px;
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       font-weight: 600;
       cursor: pointer;
-      flex: 0 0 auto;
     }
 
     .add-guest-btn:hover { background: var(--green-dark); }
@@ -480,7 +440,7 @@
     footer {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 1.25rem 3rem;
+      padding: 1.5rem 1.25rem 3rem;
       color: var(--text-muted);
       font-size: 0.8rem;
       text-align: center;
@@ -507,8 +467,6 @@
 
     @media (max-width: 640px) {
       .controls { flex-direction: column; align-items: stretch; }
-      .month-nav { justify-content: center; }
-      .days-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -516,7 +474,7 @@
 
   <header>
     <h1>Waar werkt Green Side?</h1>
-    <p>Overzicht van alle woensdagen en vrijdagen: locatie, wie aanwezig is, en wie er nog bij aansluit.</p>
+    <p>Doorlopend overzicht van woensdagen en vrijdagen: locatie, aanwezigheid en wie er nog bij aansluit.</p>
   </header>
 
   <main>
@@ -527,18 +485,15 @@
     </div>
 
     <div class="controls">
-      <div class="month-nav">
-        <button class="nav-arrow-btn" id="prevMonth" aria-label="Vorige maand">&#8592;</button>
-        <span class="month-label" id="monthLabel"></span>
-        <button class="nav-arrow-btn" id="nextMonth" aria-label="Volgende maand">&#8594;</button>
-        <button class="today-btn" id="todayBtn">Vandaag</button>
-      </div>
+      <button class="today-btn" id="todayBtn">↩ Terug naar vandaag</button>
       <span class="status-badge" id="statusBadge"><span class="status-dot"></span><span id="statusText">Lokaal (niet gedeeld)</span></span>
     </div>
 
     <div class="legend" id="legend"></div>
 
-    <div class="days-grid" id="daysGrid"></div>
+    <div class="schedule-wrap" id="scheduleWrap">
+      <div class="schedule-grid" id="scheduleGrid"></div>
+    </div>
   </main>
 
   <footer>
@@ -575,10 +530,10 @@
     const isConfigured = firebaseConfig.apiKey !== "YOUR_API_KEY";
 
     const MEMBERS = [
-      'Nick den Bol',
-      'Jorren van der Schaaff',
       'Anne-Pim van Oostveen',
       'Léon Polman',
+      'Jorren van der Schaaff',
+      'Nick den Bol',
     ];
 
     const LOCATIONS = [
@@ -610,28 +565,25 @@
       'Vakantie': { bg: '#e8d9b5', fg: '#23291f' },
     };
 
-    const SALES_HOUR_OPTIONS = [];
-    for (let h = 9; h <= 16; h++) SALES_HOUR_OPTIONS.push(`${h}-${h + 1}`);
-
     const STORAGE_KEY = 'greenSideSchedule';
     const SCHEDULE_ROOT = 'schedule';
+    const MONTHS_AHEAD = 6;
     const MONTH_NAMES = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
-    const WEEKDAY_NAMES = { 3: 'woensdag', 5: 'vrijdag' };
+    const WEEKDAY_NAMES = { 3: 'Woensdag', 5: 'Vrijdag' };
 
     let state = loadLocalState();
     let db = null;
     let rtdbRef = null, rtdbUpdate = null, rtdbPush = null, rtdbSet = null, rtdbRemove = null;
     let firebaseReady = false;
     let elementsByPath = new Map();
-    let expandedRemarks = new Set();
+    let expandedGuestRemarks = new Set();
+    let expandedAddGuestForms = new Set();
     let focusAfterRender = null;
     let newGuestRemarkDrafts = {};
 
-    const COMMENT_ICON = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>';
+    const COMMENT_ICON = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>';
 
     const today = new Date();
-    let viewYear = today.getFullYear();
-    let viewMonth = today.getMonth();
 
     function loadLocalState() {
       try {
@@ -649,18 +601,14 @@
       return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
     }
 
-    function isPastDate(d) {
-      return !isSameDate(d, today) && d < new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    }
-
-    function getScheduleDays(year, month) {
+    function getContinuousScheduleDays(monthsAhead) {
       const days = [];
-      const date = new Date(year, month, 1);
-      while (date.getMonth() === month) {
-        if (date.getDay() === 3 || date.getDay() === 5) {
-          days.push(new Date(date));
-        }
-        date.setDate(date.getDate() + 1);
+      const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const end = new Date(today.getFullYear(), today.getMonth() + monthsAhead, today.getDate());
+      const d = new Date(start);
+      while (d <= end) {
+        if (d.getDay() === 3 || d.getDay() === 5) days.push(new Date(d));
+        d.setDate(d.getDate() + 1);
       }
       return days;
     }
@@ -684,12 +632,12 @@
       return rtdbUpdate(pathRef(sub), value);
     }
 
-    function removePath(sub) {
-      return rtdbRemove(pathRef(sub));
-    }
-
     function writeSet(sub, value) {
       return rtdbSet(pathRef(sub), value);
+    }
+
+    function removePath(sub) {
+      return rtdbRemove(pathRef(sub));
     }
 
     // Mutates local state immediately (instant UI feedback + local-only
@@ -698,7 +646,7 @@
       state[dateStr] = state[dateStr] || {};
       mutator(state[dateStr]);
       cacheLocally();
-      renderCards();
+      renderGrid();
       if (firebaseReady && remoteWriteFn) {
         remoteWriteFn().catch(err => {
           showToast('Opslaan mislukt — controleer je internetverbinding', true);
@@ -709,7 +657,7 @@
 
     function applyColor(el, colorMap, value) {
       const c = colorMap[value] || colorMap[''];
-      el.style.background = c.bg;
+      el.style.backgroundColor = c.bg;
       el.style.color = c.fg;
       el.style.borderColor = value ? 'transparent' : '#e5e5e5';
     }
@@ -721,10 +669,6 @@
         return `<span class="swatch"><span class="dot" style="background:${c.bg}"></span>${s}</span>`;
       }).join('');
       legend.innerHTML = statusSwatches;
-    }
-
-    function renderMonthLabel() {
-      document.getElementById('monthLabel').textContent = `${MONTH_NAMES[viewMonth]} ${viewYear}`;
     }
 
     function setStatus(mode) {
@@ -785,17 +729,99 @@
       return e;
     }
 
-    function buildLocationRow(dateStr, dayState) {
-      const location = dayState.location || { loc: '', custom: '' };
+    function buildCommentToggle(remarkPath, hasValue) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'comment-toggle' + (hasValue ? ' has-remark' : '');
+      btn.innerHTML = COMMENT_ICON;
+      btn.setAttribute('aria-label', hasValue ? 'Opmerking bekijken of bewerken' : 'Opmerking toevoegen');
+      btn.addEventListener('click', () => {
+        if (expandedGuestRemarks.has(remarkPath)) {
+          expandedGuestRemarks.delete(remarkPath);
+        } else {
+          expandedGuestRemarks.add(remarkPath);
+          focusAfterRender = remarkPath;
+        }
+        renderGrid();
+      });
+      return btn;
+    }
 
-      const row = el('div', 'location-row');
-      row.appendChild(el('label', null, 'Locatie'));
+    function buildRemarkInput(path, value, placeholder, onBlur) {
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'remark-input';
+      input.placeholder = placeholder;
+      input.value = value || '';
+      register(path, input);
+      input.addEventListener('blur', () => onBlur(input.value));
+      return input;
+    }
+
+    // ── Cell builders ──
+
+    function buildHeaderCell(dateObj, isToday) {
+      const cell = el('div', 'g-cell g-header' + (isToday ? ' today' : ''));
+      cell.appendChild(el('span', 'wk', WEEKDAY_NAMES[dateObj.getDay()]));
+      cell.appendChild(el('span', 'dt', `${dateObj.getDate()} ${MONTH_NAMES[dateObj.getMonth()].slice(0, 3)}`));
+      return cell;
+    }
+
+    function buildStatusCell(dateStr, member, isToday) {
+      const cell = el('div', 'g-cell' + (isToday ? ' today-col' : ''));
+      const memberState = (state[dateStr].members && state[dateStr].members[member]) || {};
+      const select = document.createElement('select');
+      select.className = 'status-select';
+      const emptyOpt = document.createElement('option');
+      emptyOpt.value = '';
+      emptyOpt.textContent = '–';
+      select.appendChild(emptyOpt);
+      STATUSES.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s;
+        opt.textContent = s;
+        select.appendChild(opt);
+      });
+      select.value = memberState.status || '';
+      applyColor(select, STATUS_COLORS, memberState.status || '');
+      register(`member-status|${dateStr}|${member}`, select);
+      select.addEventListener('change', () => {
+        applyColor(select, STATUS_COLORS, select.value);
+        const patch = { status: select.value };
+        mutateAndPersist(dateStr, d => {
+          d.members = d.members || {};
+          d.members[member] = { ...(d.members[member] || {}), ...patch };
+        }, () => writeUpdate(`${dateStr}/members/${member}`, patch));
+      });
+      cell.appendChild(select);
+      return cell;
+    }
+
+    function buildRemarkCell(dateStr, member, isToday) {
+      const cell = el('div', 'g-cell' + (isToday ? ' today-col' : ''));
+      const memberState = (state[dateStr].members && state[dateStr].members[member]) || {};
+      const input = buildRemarkInput(`member-remark|${dateStr}|${member}`, memberState.remark, 'Opmerking...', value => {
+        const patch = { remark: value };
+        mutateAndPersist(dateStr, d => {
+          d.members = d.members || {};
+          d.members[member] = { ...(d.members[member] || {}), ...patch };
+        }, () => writeUpdate(`${dateStr}/members/${member}`, patch));
+      });
+      cell.appendChild(input);
+      return cell;
+    }
+
+    function buildLocationCell(dateStr, isToday) {
+      const cell = el('div', 'g-cell locatie-bg' + (isToday ? ' today-col' : ''));
+      const wrap = el('div');
+      wrap.style.width = '100%';
+      const location = state[dateStr].location || { loc: '', custom: '' };
 
       const select = document.createElement('select');
       select.className = 'loc-select';
       const emptyOpt = document.createElement('option');
       emptyOpt.value = '';
-      emptyOpt.textContent = '– kies locatie –';
+      emptyOpt.textContent = '–';
       select.appendChild(emptyOpt);
       LOCATIONS.forEach(loc => {
         const opt = document.createElement('option');
@@ -827,121 +853,45 @@
         mutateAndPersist(dateStr, d => { d.location = entry; }, () => writeUpdate(`${dateStr}/location`, entry));
       });
 
-      row.appendChild(select);
-      row.appendChild(customInput);
-      return row;
+      wrap.appendChild(select);
+      wrap.appendChild(customInput);
+      cell.appendChild(wrap);
+      return cell;
     }
 
-    function buildStatusSelect(path, value, onChange) {
-      const select = document.createElement('select');
-      select.className = 'status-select';
+    function buildGuestEntry(dateStr, guestId, guest) {
+      const entry = el('div', 'guest-entry');
+      entry.appendChild(el('div', 'guest-entry-name', guest.name));
+
+      const statusSelect = document.createElement('select');
+      statusSelect.className = 'status-select';
       const emptyOpt = document.createElement('option');
       emptyOpt.value = '';
-      emptyOpt.textContent = '– status –';
-      select.appendChild(emptyOpt);
+      emptyOpt.textContent = '–';
+      statusSelect.appendChild(emptyOpt);
       STATUSES.forEach(s => {
         const opt = document.createElement('option');
         opt.value = s;
         opt.textContent = s;
-        select.appendChild(opt);
+        statusSelect.appendChild(opt);
       });
-      select.value = value || '';
-      applyColor(select, STATUS_COLORS, value || '');
-      register(path, select);
-      select.addEventListener('change', () => {
-        applyColor(select, STATUS_COLORS, select.value);
-        onChange(select.value);
-      });
-      return select;
-    }
-
-    function buildRemarkInput(path, value, placeholder, onBlur) {
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.className = 'remark-input';
-      input.placeholder = placeholder;
-      input.value = value || '';
-      register(path, input);
-      input.addEventListener('blur', () => onBlur(input.value));
-      return input;
-    }
-
-    function buildCommentToggle(remarkPath, hasValue) {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'comment-toggle' + (hasValue ? ' has-remark' : '');
-      btn.innerHTML = COMMENT_ICON;
-      btn.setAttribute('aria-label', hasValue ? 'Opmerking bekijken of bewerken' : 'Opmerking toevoegen');
-      btn.addEventListener('click', () => {
-        if (expandedRemarks.has(remarkPath)) {
-          expandedRemarks.delete(remarkPath);
-        } else {
-          expandedRemarks.add(remarkPath);
-          focusAfterRender = remarkPath;
-        }
-        renderCards();
-      });
-      return btn;
-    }
-
-    function buildMemberRow(dateStr, member) {
-      const memberState = (state[dateStr].members && state[dateStr].members[member]) || {};
-      const row = el('div', 'person-row');
-      row.appendChild(el('span', 'person-name', member));
-
-      const statusSelect = buildStatusSelect(`member-status|${dateStr}|${member}`, memberState.status, value => {
-        const patch = { status: value };
-        mutateAndPersist(dateStr, d => {
-          d.members = d.members || {};
-          d.members[member] = { ...(d.members[member] || {}), ...patch };
-        }, () => writeUpdate(`${dateStr}/members/${member}`, patch));
-      });
-      row.appendChild(statusSelect);
-
-      const remarkPath = `member-remark|${dateStr}|${member}`;
-      const hasRemark = !!(memberState.remark && memberState.remark.trim());
-      row.appendChild(buildCommentToggle(remarkPath, hasRemark));
-
-      if (expandedRemarks.has(remarkPath)) {
-        const remarkInput = buildRemarkInput(remarkPath, memberState.remark, 'Opmerking...', value => {
-          const patch = { remark: value };
-          mutateAndPersist(dateStr, d => {
-            d.members = d.members || {};
-            d.members[member] = { ...(d.members[member] || {}), ...patch };
-          }, () => writeUpdate(`${dateStr}/members/${member}`, patch));
-        });
-        row.appendChild(remarkInput);
-      }
-      return row;
-    }
-
-    function buildGuestRow(dateStr, guestId, guest) {
-      const row = el('div', 'person-row');
-      row.appendChild(el('span', 'guest-name-label', guest.name));
-
-      const statusSelect = buildStatusSelect(`guest-status|${dateStr}|${guestId}`, guest.status, value => {
-        const patch = { status: value };
+      statusSelect.value = guest.status || '';
+      applyColor(statusSelect, STATUS_COLORS, guest.status || '');
+      register(`guest-status|${dateStr}|${guestId}`, statusSelect);
+      statusSelect.addEventListener('change', () => {
+        applyColor(statusSelect, STATUS_COLORS, statusSelect.value);
+        const patch = { status: statusSelect.value };
         mutateAndPersist(dateStr, d => {
           d.guests = d.guests || {};
           d.guests[guestId] = { ...(d.guests[guestId] || {}), ...patch };
         }, () => writeUpdate(`${dateStr}/guests/${guestId}`, patch));
       });
-      row.appendChild(statusSelect);
+      entry.appendChild(statusSelect);
 
       const remarkPath = `guest-remark|${dateStr}|${guestId}`;
       const hasRemark = !!(guest.remark && guest.remark.trim());
-      row.appendChild(buildCommentToggle(remarkPath, hasRemark));
-
-      if (expandedRemarks.has(remarkPath)) {
-        const remarkInput = buildRemarkInput(remarkPath, guest.remark, 'Opmerking...', value => {
-          const patch = { remark: value };
-          mutateAndPersist(dateStr, d => {
-            d.guests = d.guests || {};
-            d.guests[guestId] = { ...(d.guests[guestId] || {}), ...patch };
-          }, () => writeUpdate(`${dateStr}/guests/${guestId}`, patch));
-        });
-        row.appendChild(remarkInput);
-      }
+      const actions = el('div', 'guest-entry-actions');
+      actions.appendChild(buildCommentToggle(remarkPath, hasRemark));
 
       const delBtn = el('button', 'delete-btn', '✕');
       delBtn.type = 'button';
@@ -951,11 +901,39 @@
           if (d.guests) delete d.guests[guestId];
         }, () => removePath(`${dateStr}/guests/${guestId}`));
       });
-      row.appendChild(delBtn);
-      return row;
+      actions.appendChild(delBtn);
+      entry.appendChild(actions);
+
+      if (expandedGuestRemarks.has(remarkPath)) {
+        const remarkInput = buildRemarkInput(remarkPath, guest.remark, 'Opmerking...', value => {
+          const patch = { remark: value };
+          mutateAndPersist(dateStr, d => {
+            d.guests = d.guests || {};
+            d.guests[guestId] = { ...(d.guests[guestId] || {}), ...patch };
+          }, () => writeUpdate(`${dateStr}/guests/${guestId}`, patch));
+        });
+        entry.appendChild(remarkInput);
+      }
+
+      return entry;
     }
 
-    function buildAddGuestForm(dateStr) {
+    function buildAddGuestBlock(dateStr) {
+      const formPath = `guest-new-open|${dateStr}`;
+      const container = document.createDocumentFragment();
+
+      if (!expandedAddGuestForms.has(formPath)) {
+        const toggleBtn = el('button', 'add-guest-toggle', '+ Jezelf aanmelden');
+        toggleBtn.type = 'button';
+        toggleBtn.addEventListener('click', () => {
+          expandedAddGuestForms.add(formPath);
+          focusAfterRender = `guest-new-name|${dateStr}`;
+          renderGrid();
+        });
+        container.appendChild(toggleBtn);
+        return container;
+      }
+
       const form = el('div', 'add-guest-form');
 
       const nameInput = document.createElement('input');
@@ -990,7 +968,8 @@
         if (!statusSelect.value) { statusSelect.focus(); return; }
         const guestData = { name, status: statusSelect.value, remark: (newGuestRemarkDrafts[dateStr] || '').trim() };
         delete newGuestRemarkDrafts[dateStr];
-        expandedRemarks.delete(remarkPath);
+        expandedGuestRemarks.delete(remarkPath);
+        expandedAddGuestForms.delete(`guest-new-open|${dateStr}`);
 
         if (firebaseReady) {
           const newRef = rtdbPush(pathRef(`${dateStr}/guests`));
@@ -1012,7 +991,7 @@
       form.appendChild(statusSelect);
       form.appendChild(commentToggle);
 
-      if (expandedRemarks.has(remarkPath)) {
+      if (expandedGuestRemarks.has(remarkPath)) {
         const remarkInput = document.createElement('input');
         remarkInput.type = 'text';
         remarkInput.className = 'remark-input';
@@ -1024,95 +1003,57 @@
       }
 
       form.appendChild(addBtn);
-      return form;
+      container.appendChild(form);
+      return container;
     }
 
-    function buildSalesHourBar(dateStr, dayState) {
-      const bar = el('div', 'sales-hour-bar');
-      bar.appendChild(el('span', 'sales-hour-label', 'Sales uur'));
-
-      const select = document.createElement('select');
-      select.className = 'sales-hour-select';
-      const emptyOpt = document.createElement('option');
-      emptyOpt.value = '';
-      emptyOpt.textContent = '– kies uur –';
-      select.appendChild(emptyOpt);
-      SALES_HOUR_OPTIONS.forEach(range => {
-        const opt = document.createElement('option');
-        opt.value = range;
-        opt.textContent = range;
-        select.appendChild(opt);
-      });
-      select.value = dayState.salesHour || '';
-      register(`sales-hour|${dateStr}`, select);
-
-      select.addEventListener('change', () => {
-        const val = select.value;
-        if (val === '') {
-          mutateAndPersist(dateStr, d => { delete d.salesHour; }, () => writeSet(`${dateStr}/salesHour`, null));
-        } else {
-          mutateAndPersist(dateStr, d => { d.salesHour = val; }, () => writeSet(`${dateStr}/salesHour`, val));
-        }
-      });
-
-      bar.appendChild(select);
-      return bar;
-    }
-
-    function buildDayCard(dateStr, dateObj) {
-      state[dateStr] = state[dateStr] || {};
+    function buildGuestsCell(dateStr, isToday) {
+      const cell = el('div', 'g-cell guests-cell' + (isToday ? ' today-col' : ''));
       const dayState = state[dateStr];
-      const isToday = isSameDate(dateObj, today);
-
-      const card = el('div', 'day-card' + (isToday ? ' today' : ''));
-
-      const headerEl = el('div', 'day-card-header');
-      const weekday = WEEKDAY_NAMES[dateObj.getDay()];
-      headerEl.appendChild(el('div', 'day-card-date', `${weekday} ${dateObj.getDate()} ${MONTH_NAMES[dateObj.getMonth()]}`));
-      headerEl.appendChild(buildLocationRow(dateStr, dayState));
-      card.appendChild(headerEl);
-
-      const body = el('div', 'day-card-body');
-      if (dateObj.getDay() === 3) {
-        body.appendChild(buildSalesHourBar(dateStr, dayState));
-      }
-      body.appendChild(el('div', 'section-heading', 'Team'));
-      MEMBERS.forEach(member => body.appendChild(buildMemberRow(dateStr, member)));
-
-      const guestSection = el('div', 'guest-section');
-      guestSection.appendChild(el('div', 'section-heading', 'Overige aanwezigen'));
-
       const guestIds = Object.keys(dayState.guests || {});
-      if (guestIds.length === 0) {
-        guestSection.appendChild(el('p', 'no-guests', 'Nog niemand aangemeld.'));
-      } else {
-        guestIds.forEach(id => guestSection.appendChild(buildGuestRow(dateStr, id, dayState.guests[id])));
-      }
-      guestSection.appendChild(buildAddGuestForm(dateStr));
-      body.appendChild(guestSection);
-
-      card.appendChild(body);
-      return card;
+      guestIds.forEach(id => cell.appendChild(buildGuestEntry(dateStr, id, dayState.guests[id])));
+      cell.appendChild(buildAddGuestBlock(dateStr));
+      return cell;
     }
 
-    function renderCards() {
+    function renderGrid() {
       const focusInfo = captureFocus();
       elementsByPath = new Map();
 
-      const allDays = getScheduleDays(viewYear, viewMonth);
-      const days = allDays.filter(d => !isPastDate(d));
-      const grid = document.getElementById('daysGrid');
+      const days = getContinuousScheduleDays(MONTHS_AHEAD);
+      days.forEach(d => { state[dateToStr(d)] = state[dateToStr(d)] || {}; });
+
+      const grid = document.getElementById('scheduleGrid');
       grid.innerHTML = '';
+      grid.style.gridTemplateColumns = `190px repeat(${days.length}, 128px)`;
 
-      if (days.length === 0) {
-        const msg = allDays.length === 0
-          ? 'Geen woensdagen of vrijdagen in deze maand.'
-          : 'Alle woensdagen en vrijdagen deze maand liggen al in het verleden.';
-        grid.innerHTML = `<p style="padding:1.5rem;color:#6b7568;">${msg}</p>`;
-        return;
-      }
+      // Header row
+      grid.appendChild(el('div', 'g-cell g-label g-corner', 'Team'));
+      days.forEach(d => grid.appendChild(buildHeaderCell(d, isSameDate(d, today))));
 
-      days.forEach(d => grid.appendChild(buildDayCard(dateToStr(d), d)));
+      // Locatie row
+      grid.appendChild(el('div', 'g-cell g-label locatie-bg', 'Locatie'));
+      days.forEach(d => grid.appendChild(buildLocationCell(dateToStr(d), isSameDate(d, today))));
+
+      // Member status rows
+      MEMBERS.forEach(member => {
+        grid.appendChild(el('div', 'g-cell g-label', member));
+        days.forEach(d => grid.appendChild(buildStatusCell(dateToStr(d), member, isSameDate(d, today))));
+      });
+
+      // Opmerking section divider
+      grid.appendChild(el('div', 'g-cell g-label section-label', 'Opmerking'));
+      days.forEach(d => grid.appendChild(el('div', 'g-cell section-cell' + (isSameDate(d, today) ? ' today-col' : ''))));
+
+      // Per-member remark rows
+      MEMBERS.forEach(member => {
+        grid.appendChild(el('div', 'g-cell g-label', member));
+        days.forEach(d => grid.appendChild(buildRemarkCell(dateToStr(d), member, isSameDate(d, today))));
+      });
+
+      // Guests section
+      grid.appendChild(el('div', 'g-cell g-label section-label', 'Overige aanmeldingen'));
+      days.forEach(d => grid.appendChild(buildGuestsCell(dateToStr(d), isSameDate(d, today))));
 
       if (focusAfterRender) {
         const target = elementsByPath.get(focusAfterRender);
@@ -1123,31 +1064,12 @@
       }
     }
 
-    function render() {
-      renderMonthLabel();
-      renderCards();
-    }
-
-    document.getElementById('prevMonth').addEventListener('click', () => {
-      viewMonth -= 1;
-      if (viewMonth < 0) { viewMonth = 11; viewYear -= 1; }
-      render();
-    });
-
-    document.getElementById('nextMonth').addEventListener('click', () => {
-      viewMonth += 1;
-      if (viewMonth > 11) { viewMonth = 0; viewYear += 1; }
-      render();
-    });
-
     document.getElementById('todayBtn').addEventListener('click', () => {
-      viewYear = today.getFullYear();
-      viewMonth = today.getMonth();
-      render();
+      document.getElementById('scheduleWrap').scrollTo({ left: 0, behavior: 'smooth' });
     });
 
     renderLegend();
-    render();
+    renderGrid();
 
     if (!isConfigured) {
       document.getElementById('setupBanner').classList.add('visible');
@@ -1170,7 +1092,7 @@
           firebaseReady = true;
           state = snap.val() || {};
           cacheLocally();
-          renderCards();
+          renderGrid();
           setStatus('live');
         }, err => {
           firebaseReady = false;
