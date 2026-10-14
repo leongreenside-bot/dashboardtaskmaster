@@ -307,6 +307,21 @@
       width: 100%;
     }
 
+    .remark-popup {
+      position: fixed;
+      z-index: 9999;
+      background: var(--text-main);
+      color: #fff;
+      padding: 0.6rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      line-height: 1.4;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      pointer-events: none;
+    }
+
     /* ── Guests cell ── */
     .guests-cell {
       padding: 0.5rem 0.4rem;
@@ -736,16 +751,61 @@
       return btn;
     }
 
+    // ── Remark read-popup ──
+    let activeRemarkPopup = null;
+
+    function closeRemarkPopup() {
+      if (activeRemarkPopup) {
+        activeRemarkPopup.remove();
+        activeRemarkPopup = null;
+      }
+    }
+
+    function showRemarkPopup(input) {
+      const rect = input.getBoundingClientRect();
+      const popup = document.createElement('div');
+      popup.className = 'remark-popup';
+      popup.textContent = input.value;
+      popup.dataset.forPath = input.dataset.path;
+      document.body.appendChild(popup);
+
+      const popupWidth = Math.min(260, Math.max(160, window.innerWidth - 24));
+      popup.style.width = popupWidth + 'px';
+      let left = rect.left;
+      if (left + popupWidth > window.innerWidth - 12) left = window.innerWidth - popupWidth - 12;
+      if (left < 12) left = 12;
+      popup.style.left = `${left}px`;
+      popup.style.top = `${rect.bottom + 6}px`;
+
+      activeRemarkPopup = popup;
+    }
+
+    function syncRemarkPopup(input) {
+      if (!input.value.trim()) {
+        closeRemarkPopup();
+        return;
+      }
+      if (activeRemarkPopup && activeRemarkPopup.dataset.forPath === input.dataset.path) {
+        activeRemarkPopup.textContent = input.value;
+      } else {
+        closeRemarkPopup();
+        showRemarkPopup(input);
+      }
+    }
+
     function buildRemarkInput(path, value, placeholder, onBlur) {
       const input = document.createElement('input');
       input.type = 'text';
       input.className = 'remark-input';
       input.placeholder = placeholder;
       input.value = value || '';
-      input.title = value || '';
       register(path, input);
-      input.addEventListener('input', () => { input.title = input.value; });
-      input.addEventListener('blur', () => onBlur(input.value));
+      input.addEventListener('focus', () => syncRemarkPopup(input));
+      input.addEventListener('input', () => syncRemarkPopup(input));
+      input.addEventListener('blur', () => {
+        closeRemarkPopup();
+        onBlur(input.value);
+      });
       return input;
     }
 
@@ -936,12 +996,13 @@
         remarkInput.className = 'remark-input';
         remarkInput.placeholder = 'Opmerking...';
         remarkInput.value = newGuestRemarkDrafts[dateStr] || '';
-        remarkInput.title = newGuestRemarkDrafts[dateStr] || '';
         register(remarkPath, remarkInput);
+        remarkInput.addEventListener('focus', () => syncRemarkPopup(remarkInput));
         remarkInput.addEventListener('input', () => {
           newGuestRemarkDrafts[dateStr] = remarkInput.value;
-          remarkInput.title = remarkInput.value;
+          syncRemarkPopup(remarkInput);
         });
+        remarkInput.addEventListener('blur', closeRemarkPopup);
         form.appendChild(remarkInput);
       }
 
@@ -1027,6 +1088,9 @@
     document.getElementById('todayBtn').addEventListener('click', () => {
       document.getElementById('scheduleWrap').scrollTo({ left: 0, behavior: 'smooth' });
     });
+
+    document.getElementById('scheduleWrap').addEventListener('scroll', closeRemarkPopup);
+    window.addEventListener('resize', closeRemarkPopup);
 
     renderLegend();
     renderGrid();
