@@ -176,18 +176,34 @@
     }
 
     .schedule-grid {
-      display: grid;
-      align-items: stretch;
+      border-collapse: collapse;
+      table-layout: fixed;
     }
 
     .g-cell {
       padding: 0.45rem 0.5rem;
       border-bottom: 1px solid var(--smoke);
       border-right: 1px solid #f0f1ee;
+      vertical-align: middle;
+      min-width: 0;
+    }
+
+    .cell-flex {
       display: flex;
       align-items: center;
       justify-content: center;
-      min-width: 0;
+      width: 100%;
+    }
+
+    .cell-flex.col {
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .cell-flex.stack {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.35rem;
     }
 
     .g-label {
@@ -195,7 +211,7 @@
       left: 0;
       z-index: 2;
       background: var(--card);
-      justify-content: flex-start;
+      text-align: left;
       font-weight: 600;
       font-size: 0.82rem;
       padding: 0.5rem 0.8rem;
@@ -219,8 +235,7 @@
     .g-header {
       background: var(--green);
       color: #fff;
-      flex-direction: column;
-      gap: 0.1rem;
+      text-align: center;
       font-family: 'Poppins', sans-serif;
       padding: 0.6rem 0.3rem;
       border-right: 1px solid rgba(255,255,255,0.15);
@@ -294,9 +309,6 @@
 
     /* ── Guests cell ── */
     .guests-cell {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 0.35rem;
       padding: 0.5rem 0.4rem;
     }
 
@@ -479,7 +491,7 @@
     <div class="legend" id="legend"></div>
 
     <div class="schedule-wrap" id="scheduleWrap">
-      <div class="schedule-grid" id="scheduleGrid"></div>
+      <table class="schedule-grid" id="scheduleGrid"></table>
     </div>
   </main>
 
@@ -744,14 +756,17 @@
     // ── Cell builders ──
 
     function buildHeaderCell(dateObj, isToday) {
-      const cell = el('div', 'g-cell g-header' + (isToday ? ' today' : ''));
-      cell.appendChild(el('span', 'wk', WEEKDAY_NAMES[dateObj.getDay()]));
-      cell.appendChild(el('span', 'dt', `${dateObj.getDate()} ${MONTH_NAMES[dateObj.getMonth()].slice(0, 3)}`));
+      const cell = el('td', 'g-cell g-header' + (isToday ? ' today' : ''));
+      const inner = el('div', 'cell-flex col');
+      inner.appendChild(el('span', 'wk', WEEKDAY_NAMES[dateObj.getDay()]));
+      inner.appendChild(el('span', 'dt', `${dateObj.getDate()} ${MONTH_NAMES[dateObj.getMonth()].slice(0, 3)}`));
+      cell.appendChild(inner);
       return cell;
     }
 
     function buildStatusCell(dateStr, member, isToday) {
-      const cell = el('div', 'g-cell' + (isToday ? ' today-col' : ''));
+      const cell = el('td', 'g-cell' + (isToday ? ' today-col' : ''));
+      const inner = el('div', 'cell-flex');
       const memberState = (state[dateStr].members && state[dateStr].members[member]) || {};
       const select = document.createElement('select');
       select.className = 'status-select';
@@ -776,12 +791,14 @@
           d.members[member] = { ...(d.members[member] || {}), ...patch };
         }, () => writeUpdate(`${dateStr}/members/${member}`, patch));
       });
-      cell.appendChild(select);
+      inner.appendChild(select);
+      cell.appendChild(inner);
       return cell;
     }
 
     function buildRemarkCell(dateStr, member, isToday) {
-      const cell = el('div', 'g-cell' + (isToday ? ' today-col' : ''));
+      const cell = el('td', 'g-cell' + (isToday ? ' today-col' : ''));
+      const inner = el('div', 'cell-flex');
       const memberState = (state[dateStr].members && state[dateStr].members[member]) || {};
       const input = buildRemarkInput(`member-remark|${dateStr}|${member}`, memberState.remark, 'Opmerking...', value => {
         const patch = { remark: value };
@@ -790,14 +807,14 @@
           d.members[member] = { ...(d.members[member] || {}), ...patch };
         }, () => writeUpdate(`${dateStr}/members/${member}`, patch));
       });
-      cell.appendChild(input);
+      inner.appendChild(input);
+      cell.appendChild(inner);
       return cell;
     }
 
     function buildLocationCell(dateStr, isToday) {
-      const cell = el('div', 'g-cell locatie-bg' + (isToday ? ' today-col' : ''));
-      const wrap = el('div');
-      wrap.style.width = '100%';
+      const cell = el('td', 'g-cell locatie-bg' + (isToday ? ' today-col' : ''));
+      const wrap = el('div', 'cell-flex');
       const location = state[dateStr].location || { loc: '', custom: '' };
 
       const select = document.createElement('select');
@@ -935,11 +952,13 @@
     }
 
     function buildGuestsCell(dateStr, isToday) {
-      const cell = el('div', 'g-cell guests-cell' + (isToday ? ' today-col' : ''));
+      const cell = el('td', 'g-cell guests-cell' + (isToday ? ' today-col' : ''));
+      const inner = el('div', 'cell-flex stack');
       const dayState = state[dateStr];
       const guestIds = Object.keys(dayState.guests || {});
-      guestIds.forEach(id => cell.appendChild(buildGuestEntry(dateStr, id, dayState.guests[id])));
-      cell.appendChild(buildAddGuestBlock(dateStr));
+      guestIds.forEach(id => inner.appendChild(buildGuestEntry(dateStr, id, dayState.guests[id])));
+      inner.appendChild(buildAddGuestBlock(dateStr));
+      cell.appendChild(inner);
       return cell;
     }
 
@@ -950,37 +969,52 @@
       const days = getContinuousScheduleDays(MONTHS_AHEAD);
       days.forEach(d => { state[dateToStr(d)] = state[dateToStr(d)] || {}; });
 
-      const grid = document.getElementById('scheduleGrid');
-      grid.innerHTML = '';
-      grid.style.gridTemplateColumns = `190px repeat(${days.length}, 128px)`;
+      const table = document.getElementById('scheduleGrid');
+      table.innerHTML = '';
+      table.style.width = `${190 + days.length * 128}px`;
+
+      const colgroup = document.createElement('colgroup');
+      const labelCol = document.createElement('col');
+      labelCol.style.width = '190px';
+      colgroup.appendChild(labelCol);
+      days.forEach(() => {
+        const c = document.createElement('col');
+        c.style.width = '128px';
+        colgroup.appendChild(c);
+      });
+      table.appendChild(colgroup);
+
+      const tbody = document.createElement('tbody');
+      table.appendChild(tbody);
+
+      function addRow(labelCell, cells) {
+        const tr = document.createElement('tr');
+        tr.appendChild(labelCell);
+        cells.forEach(c => tr.appendChild(c));
+        tbody.appendChild(tr);
+      }
 
       // Header row
-      grid.appendChild(el('div', 'g-cell g-label g-corner', 'Team'));
-      days.forEach(d => grid.appendChild(buildHeaderCell(d, isSameDate(d, today))));
+      addRow(el('th', 'g-cell g-label g-corner', 'Team'), days.map(d => buildHeaderCell(d, isSameDate(d, today))));
 
       // Locatie row
-      grid.appendChild(el('div', 'g-cell g-label locatie-bg', 'Locatie'));
-      days.forEach(d => grid.appendChild(buildLocationCell(dateToStr(d), isSameDate(d, today))));
+      addRow(el('th', 'g-cell g-label locatie-bg', 'Locatie'), days.map(d => buildLocationCell(dateToStr(d), isSameDate(d, today))));
 
       // Member status rows
       MEMBERS.forEach(member => {
-        grid.appendChild(el('div', 'g-cell g-label', member));
-        days.forEach(d => grid.appendChild(buildStatusCell(dateToStr(d), member, isSameDate(d, today))));
+        addRow(el('th', 'g-cell g-label', member), days.map(d => buildStatusCell(dateToStr(d), member, isSameDate(d, today))));
       });
 
       // Opmerking section divider
-      grid.appendChild(el('div', 'g-cell g-label section-label', 'Opmerking'));
-      days.forEach(d => grid.appendChild(el('div', 'g-cell section-cell' + (isSameDate(d, today) ? ' today-col' : ''))));
+      addRow(el('th', 'g-cell g-label section-label', 'Opmerking'), days.map(d => el('td', 'g-cell section-cell' + (isSameDate(d, today) ? ' today-col' : ''))));
 
       // Per-member remark rows
       MEMBERS.forEach(member => {
-        grid.appendChild(el('div', 'g-cell g-label', member));
-        days.forEach(d => grid.appendChild(buildRemarkCell(dateToStr(d), member, isSameDate(d, today))));
+        addRow(el('th', 'g-cell g-label', member), days.map(d => buildRemarkCell(dateToStr(d), member, isSameDate(d, today))));
       });
 
       // Guests section
-      grid.appendChild(el('div', 'g-cell g-label section-label', 'Overige aanmeldingen'));
-      days.forEach(d => grid.appendChild(buildGuestsCell(dateToStr(d), isSameDate(d, today))));
+      addRow(el('th', 'g-cell g-label section-label', 'Overige aanmeldingen'), days.map(d => buildGuestsCell(dateToStr(d), isSameDate(d, today))));
 
       if (focusAfterRender) {
         const target = elementsByPath.get(focusAfterRender);
