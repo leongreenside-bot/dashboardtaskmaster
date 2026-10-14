@@ -259,7 +259,7 @@
       background-position: right 0.4rem center;
     }
 
-    select.loc-select, select.sales-hour-select {
+    select.loc-select {
       font-family: 'Inter', sans-serif;
       font-size: 0.74rem;
       font-weight: 500;
@@ -277,9 +277,8 @@
       background-position: right 0.4rem center;
     }
 
-    .sales-hour-dash {
-      color: var(--text-muted);
-      font-size: 0.8rem;
+    .locatie-bg {
+      background: var(--pistachio) !important;
     }
 
     input.loc-custom {
@@ -566,9 +565,6 @@
       'Vakantie': { bg: '#e8d9b5', fg: '#23291f' },
     };
 
-    const SALES_HOUR_OPTIONS = [];
-    for (let h = 9; h <= 16; h++) SALES_HOUR_OPTIONS.push(`${h}-${h + 1}`);
-
     const STORAGE_KEY = 'greenSideSchedule';
     const SCHEDULE_ROOT = 'schedule';
     const MONTHS_AHEAD = 6;
@@ -816,7 +812,7 @@
     }
 
     function buildLocationCell(dateStr, isToday) {
-      const cell = el('div', 'g-cell' + (isToday ? ' today-col' : ''));
+      const cell = el('div', 'g-cell locatie-bg' + (isToday ? ' today-col' : ''));
       const wrap = el('div');
       wrap.style.width = '100%';
       const location = state[dateStr].location || { loc: '', custom: '' };
@@ -860,39 +856,6 @@
       wrap.appendChild(select);
       wrap.appendChild(customInput);
       cell.appendChild(wrap);
-      return cell;
-    }
-
-    function buildSalesHourCell(dateStr, dateObj, isToday) {
-      const cell = el('div', 'g-cell' + (isToday ? ' today-col' : ''));
-      if (dateObj.getDay() !== 3) {
-        cell.appendChild(el('span', 'sales-hour-dash', '—'));
-        return cell;
-      }
-      const dayState = state[dateStr];
-      const select = document.createElement('select');
-      select.className = 'sales-hour-select';
-      const emptyOpt = document.createElement('option');
-      emptyOpt.value = '';
-      emptyOpt.textContent = '–';
-      select.appendChild(emptyOpt);
-      SALES_HOUR_OPTIONS.forEach(range => {
-        const opt = document.createElement('option');
-        opt.value = range;
-        opt.textContent = range;
-        select.appendChild(opt);
-      });
-      select.value = dayState.salesHour || '';
-      register(`sales-hour|${dateStr}`, select);
-      select.addEventListener('change', () => {
-        const val = select.value;
-        if (val === '') {
-          mutateAndPersist(dateStr, d => { delete d.salesHour; }, () => writeSet(`${dateStr}/salesHour`, null));
-        } else {
-          mutateAndPersist(dateStr, d => { d.salesHour = val; }, () => writeSet(`${dateStr}/salesHour`, val));
-        }
-      });
-      cell.appendChild(select);
       return cell;
     }
 
@@ -1068,19 +1031,15 @@
       grid.appendChild(el('div', 'g-cell g-label g-corner', 'Team'));
       days.forEach(d => grid.appendChild(buildHeaderCell(d, isSameDate(d, today))));
 
+      // Locatie row
+      grid.appendChild(el('div', 'g-cell g-label locatie-bg', 'Locatie'));
+      days.forEach(d => grid.appendChild(buildLocationCell(dateToStr(d), isSameDate(d, today))));
+
       // Member status rows
       MEMBERS.forEach(member => {
         grid.appendChild(el('div', 'g-cell g-label', member));
         days.forEach(d => grid.appendChild(buildStatusCell(dateToStr(d), member, isSameDate(d, today))));
       });
-
-      // Locatie row
-      grid.appendChild(el('div', 'g-cell g-label', 'Locatie'));
-      days.forEach(d => grid.appendChild(buildLocationCell(dateToStr(d), isSameDate(d, today))));
-
-      // Sales uur row
-      grid.appendChild(el('div', 'g-cell g-label', 'Sales uur'));
-      days.forEach(d => grid.appendChild(buildSalesHourCell(dateToStr(d), d, isSameDate(d, today))));
 
       // Opmerking section divider
       grid.appendChild(el('div', 'g-cell g-label section-label', 'Opmerking'));
