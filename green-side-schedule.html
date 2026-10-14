@@ -863,31 +863,6 @@
       const entry = el('div', 'guest-entry');
       entry.appendChild(el('div', 'guest-entry-name', guest.name));
 
-      const statusSelect = document.createElement('select');
-      statusSelect.className = 'status-select';
-      const emptyOpt = document.createElement('option');
-      emptyOpt.value = '';
-      emptyOpt.textContent = '–';
-      statusSelect.appendChild(emptyOpt);
-      STATUSES.forEach(s => {
-        const opt = document.createElement('option');
-        opt.value = s;
-        opt.textContent = s;
-        statusSelect.appendChild(opt);
-      });
-      statusSelect.value = guest.status || '';
-      applyColor(statusSelect, STATUS_COLORS, guest.status || '');
-      register(`guest-status|${dateStr}|${guestId}`, statusSelect);
-      statusSelect.addEventListener('change', () => {
-        applyColor(statusSelect, STATUS_COLORS, statusSelect.value);
-        const patch = { status: statusSelect.value };
-        mutateAndPersist(dateStr, d => {
-          d.guests = d.guests || {};
-          d.guests[guestId] = { ...(d.guests[guestId] || {}), ...patch };
-        }, () => writeUpdate(`${dateStr}/guests/${guestId}`, patch));
-      });
-      entry.appendChild(statusSelect);
-
       const remarkPath = `guest-remark|${dateStr}|${guestId}`;
       const hasRemark = !!(guest.remark && guest.remark.trim());
       const actions = el('div', 'guest-entry-actions');
@@ -942,20 +917,6 @@
       nameInput.placeholder = 'Jouw naam';
       register(`guest-new-name|${dateStr}`, nameInput);
 
-      const statusSelect = document.createElement('select');
-      statusSelect.className = 'status-select';
-      const emptyOpt = document.createElement('option');
-      emptyOpt.value = '';
-      emptyOpt.textContent = '– status –';
-      statusSelect.appendChild(emptyOpt);
-      STATUSES.forEach(s => {
-        const opt = document.createElement('option');
-        opt.value = s;
-        opt.textContent = s;
-        statusSelect.appendChild(opt);
-      });
-      register(`guest-new-status|${dateStr}`, statusSelect);
-
       const remarkPath = `guest-new-remark|${dateStr}`;
       const hasDraft = !!(newGuestRemarkDrafts[dateStr] && newGuestRemarkDrafts[dateStr].trim());
       const commentToggle = buildCommentToggle(remarkPath, hasDraft);
@@ -965,8 +926,7 @@
       addBtn.addEventListener('click', () => {
         const name = nameInput.value.trim();
         if (!name) { nameInput.focus(); return; }
-        if (!statusSelect.value) { statusSelect.focus(); return; }
-        const guestData = { name, status: statusSelect.value, remark: (newGuestRemarkDrafts[dateStr] || '').trim() };
+        const guestData = { name, remark: (newGuestRemarkDrafts[dateStr] || '').trim() };
         delete newGuestRemarkDrafts[dateStr];
         expandedGuestRemarks.delete(remarkPath);
         expandedAddGuestForms.delete(`guest-new-open|${dateStr}`);
@@ -988,7 +948,6 @@
       });
 
       form.appendChild(nameInput);
-      form.appendChild(statusSelect);
       form.appendChild(commentToggle);
 
       if (expandedGuestRemarks.has(remarkPath)) {
