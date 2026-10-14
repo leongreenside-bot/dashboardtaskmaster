@@ -281,7 +281,7 @@
       padding: 0.3rem 1.2rem 0.3rem 0.4rem;
       border-radius: 7px;
       border: 1px solid var(--smoke);
-      background-color: #fff;
+      background-color: var(--pistachio);
       color: var(--text-main);
       cursor: pointer;
       width: 100%;
@@ -542,13 +542,7 @@
       'Thuis',
     ];
 
-    const LOCATION_COLORS = {
-      '': { bg: '#ffffff', fg: '#6b7568' },
-      'Stadskantoor': { bg: '#375478', fg: '#ffffff' },
-      'Bij Anne-Pim': { bg: '#397655', fg: '#ffffff' },
-      'Bij Léon': { bg: '#cde3bb', fg: '#23291f' },
-      'Thuis': { bg: '#8a6f47', fg: '#ffffff' },
-    };
+
 
     const STATUSES = ['Aanwezig', 'Afwezig', 'Online', 'Vakantie'];
 
@@ -748,7 +742,9 @@
       input.className = 'remark-input';
       input.placeholder = placeholder;
       input.value = value || '';
+      input.title = value || '';
       register(path, input);
+      input.addEventListener('input', () => { input.title = input.value; });
       input.addEventListener('blur', () => onBlur(input.value));
       return input;
     }
@@ -830,7 +826,6 @@
         select.appendChild(opt);
       });
       select.value = location.loc || '';
-      applyColor(select, LOCATION_COLORS, location.loc || '');
       register(`loc|${dateStr}`, select);
 
       select.addEventListener('change', () => {
@@ -941,8 +936,12 @@
         remarkInput.className = 'remark-input';
         remarkInput.placeholder = 'Opmerking...';
         remarkInput.value = newGuestRemarkDrafts[dateStr] || '';
+        remarkInput.title = newGuestRemarkDrafts[dateStr] || '';
         register(remarkPath, remarkInput);
-        remarkInput.addEventListener('input', () => { newGuestRemarkDrafts[dateStr] = remarkInput.value; });
+        remarkInput.addEventListener('input', () => {
+          newGuestRemarkDrafts[dateStr] = remarkInput.value;
+          remarkInput.title = remarkInput.value;
+        });
         form.appendChild(remarkInput);
       }
 
