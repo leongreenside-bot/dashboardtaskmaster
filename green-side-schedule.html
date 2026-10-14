@@ -281,19 +281,6 @@
       background: var(--pistachio) !important;
     }
 
-    input.loc-custom {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.74rem;
-      padding: 0.3rem 0.4rem;
-      border-radius: 7px;
-      border: 1px solid var(--sand);
-      background: #fffdf7;
-      width: 100%;
-      margin-top: 0.3rem;
-      display: none;
-    }
-
-    input.loc-custom.visible { display: block; }
 
     input.remark-input {
       font-family: 'Inter', sans-serif;
@@ -537,22 +524,18 @@
     ];
 
     const LOCATIONS = [
-      'Stadskantoor Utrecht',
-      'Bij Léon in Tricht',
-      'Bij AP in Utrecht',
-      'Bij Jorren in Zoetermeer',
+      'Stadskantoor',
+      'Bij Anne-Pim',
+      'Bij Léon',
       'Thuis',
-      'Anders...',
     ];
 
     const LOCATION_COLORS = {
       '': { bg: '#ffffff', fg: '#6b7568' },
-      'Stadskantoor Utrecht': { bg: '#375478', fg: '#ffffff' },
-      'Bij Léon in Tricht': { bg: '#397655', fg: '#ffffff' },
-      'Bij AP in Utrecht': { bg: '#cde3bb', fg: '#23291f' },
-      'Bij Jorren in Zoetermeer': { bg: '#e5e5e5', fg: '#23291f' },
+      'Stadskantoor': { bg: '#375478', fg: '#ffffff' },
+      'Bij Anne-Pim': { bg: '#397655', fg: '#ffffff' },
+      'Bij Léon': { bg: '#cde3bb', fg: '#23291f' },
       'Thuis': { bg: '#8a6f47', fg: '#ffffff' },
-      'Anders...': { bg: '#e8d9b5', fg: '#23291f' },
     };
 
     const STATUSES = ['Aanwezig', 'Afwezig', 'Online', 'Vakantie'];
@@ -833,28 +816,13 @@
       applyColor(select, LOCATION_COLORS, location.loc || '');
       register(`loc|${dateStr}`, select);
 
-      const customInput = document.createElement('input');
-      customInput.type = 'text';
-      customInput.className = 'loc-custom' + (location.loc === 'Anders...' ? ' visible' : '');
-      customInput.placeholder = 'Vul locatie in...';
-      customInput.value = location.custom || '';
-      register(`loc-custom|${dateStr}`, customInput);
-
       select.addEventListener('change', () => {
         const loc = select.value;
-        const existingCustom = (state[dateStr].location && state[dateStr].location.custom) || '';
-        const entry = { loc, custom: loc === 'Anders...' ? existingCustom : '' };
-        mutateAndPersist(dateStr, d => { d.location = entry; }, () => writeUpdate(`${dateStr}/location`, entry));
-      });
-
-      customInput.addEventListener('blur', () => {
-        const existing = state[dateStr].location || { loc: 'Anders...', custom: '' };
-        const entry = { loc: existing.loc, custom: customInput.value };
+        const entry = { loc };
         mutateAndPersist(dateStr, d => { d.location = entry; }, () => writeUpdate(`${dateStr}/location`, entry));
       });
 
       wrap.appendChild(select);
-      wrap.appendChild(customInput);
       cell.appendChild(wrap);
       return cell;
     }
