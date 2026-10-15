@@ -574,7 +574,7 @@
     const STORAGE_KEY = 'greenSideSchedule';
     const SCHEDULE_ROOT = 'schedule';
     const MONTHS_AHEAD = 6;
-    const LABEL_COL_WIDTH = 130;
+    const LABEL_COL_WIDTH = 100;
     const MONTH_NAMES = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
     const WEEKDAY_NAMES = { 3: 'Woensdag', 5: 'Vrijdag' };
 
@@ -1081,7 +1081,7 @@
       });
 
       // Guests section
-      addRow(el('th', 'g-cell g-label section-label', 'Overige aanmeldingen'), days.map(d => buildGuestsCell(dateToStr(d), isSameDate(d, today))));
+      addRow(el('th', 'g-cell g-label section-label', 'Aanmelden'), days.map(d => buildGuestsCell(dateToStr(d), isSameDate(d, today))));
 
       if (focusAfterRender) {
         const target = elementsByPath.get(focusAfterRender);
